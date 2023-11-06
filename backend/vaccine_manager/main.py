@@ -1,6 +1,7 @@
+from typing import List
+
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
-from typing import List
 
 import models
 import pydantic_models
