@@ -41,3 +41,15 @@ class FamilyMember(FamilyMemberBase):
 
     class Config: 
         orm_mode = True
+
+class VaccineBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class VaccineCreate(VaccineBase):
+    pass
+
+class Vaccine(VaccineBase):
+    id: int
+    class Config:
+        orm_mode = True

@@ -39,5 +39,32 @@ class FamilyMember(Base):
     updated_at = Column(DateTime)
 
     family = relationship('Family', back_populates='members')
+    vaccine_records = relationship('VaccineRecord', back_populates='family_member')
 
     __table_args__ = (UniqueConstraint('family_id', 'name', 'birthdate'),)
+
+class Vaccine(Base):
+    __tablename__ = 'vaccines'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    description = Column(String)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+    vaccine_records = relationship('VaccineRecord', back_populates='vaccine')
+
+    __table_args__ = (UniqueConstraint('name'),)
+
+class VaccineRecord(Base):
+    __tablename__ = 'vaccine_records'
+    id = Column(Integer, primary_key=True)
+    family_member_id = Column(Integer, ForeignKey('family_members.id'))
+    vaccine_id = Column(Integer, ForeignKey('vaccines.id'))
+    date = Column(Date)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+    family_member = relationship('FamilyMember', back_populates='vaccine_records')
+    vaccine = relationship('Vaccine', back_populates='vaccine_records')
+
+    __table_args__ = (UniqueConstraint('family_member_id', 'vaccine_id'),)
