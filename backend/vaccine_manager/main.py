@@ -11,7 +11,6 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
 # Create db session
 def get_db():
     db = SessionLocal(bind=engine)
@@ -23,7 +22,8 @@ def get_db():
 
 @app.post("/users/", response_model=pydantic_models.User)
 def create_user(user: pydantic_models.UserCreate, db: Session = Depends(get_db)):
-    db_user = models.User(**user.dict())
+    #db_user = models.User(**user.dict())
+    db_user = models.User(name=user.name, email=user.email)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
