@@ -59,6 +59,8 @@ class VaccineRecord(Base):
     __tablename__ = 'vaccine_records'
     id = Column(Integer, primary_key=True)
     family_member_id = Column(Integer, ForeignKey('family_members.id'))
+    location = Column(String)
+    dosage = Column(String)
     vaccine_id = Column(Integer, ForeignKey('vaccines.id'))
     date = Column(Date)
     created_at = Column(DateTime)

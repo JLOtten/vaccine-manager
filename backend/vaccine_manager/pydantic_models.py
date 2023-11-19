@@ -53,3 +53,19 @@ class Vaccine(VaccineBase):
     id: int
     class Config:
         orm_mode = True
+
+class VaccineRecordBase(BaseModel):
+    date: date
+    vaccine_id: int
+    location: str
+    dosage: Optional[str] = None
+
+class VaccineRecordCreate(VaccineRecordBase):
+    pass
+
+class VaccineRecord(VaccineRecordBase):
+    id: int
+    family_member_id: int
+    class Config:
+        orm_mode = True
+   
