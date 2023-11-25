@@ -1,72 +1,74 @@
-from sqlalchemy import (Column, Date, DateTime, ForeignKey, Integer, String,
-                        UniqueConstraint)
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy import (ForeignKey, String, Integer, UniqueConstraint, Date, DateTime)
+from sqlalchemy.orm import (Mapped, mapped_column, relationship, DeclarativeBase)
+import sqlalchemy as sa
+from datetime import datetime, date
+from typing import List, Optional
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    email: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(default=sa.func.now())
+    updated_at: Mapped[datetime] = mapped_column(default=sa.func.now(), onupdate=sa.func.now())
 
-    families = relationship('Family', back_populates='user')
+    families: Mapped[List["Family"]] = relationship(back_populates='user')
 
 class Family(Base):
     __tablename__ = 'families' 
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    created_at: Mapped[datetime] = mapped_column(default=sa.func.now())
+    updated_at: Mapped[datetime] = mapped_column(default=sa.func.now(), onupdate=sa.func.now())
 
-    user = relationship('User', back_populates='families')
-    members = relationship('FamilyMember', back_populates='family')
+
+    user: Mapped["User"] = relationship(back_populates='families')
+    members: Mapped[List["FamilyMember"]] = relationship(back_populates='family')
 
     __table_args__ = (UniqueConstraint('user_id','name'),)
     
 class FamilyMember(Base):
     __tablename__ = 'family_members'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    birthdate = Column(Date)
-    sex = Column(String)
-    family_id = Column(Integer, ForeignKey('families.id'))
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    birthdate: Mapped[date]
+    sex: Mapped[str]
+    family_id: Mapped[int] = mapped_column(ForeignKey('families.id'))
+    created_at: Mapped[datetime] = mapped_column(default=sa.func.now())
+    updated_at: Mapped[datetime] = mapped_column(default=sa.func.now(), onupdate=sa.func.now())
 
-    family = relationship('Family', back_populates='members')
-    vaccine_records = relationship('VaccineRecord', back_populates='family_member')
+    family: Mapped["Family"] = relationship(back_populates='members')
+    vaccine_records: Mapped[List["VaccineRecord"]] = relationship(back_populates='family_members')
 
     __table_args__ = (UniqueConstraint('family_id', 'name', 'birthdate'),)
 
 class Vaccine(Base):
     __tablename__ = 'vaccines'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    description = Column(String)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
-
-    vaccine_records = relationship('VaccineRecord', back_populates='vaccine')
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    description: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(default=sa.func.now())
+    updated_at: Mapped[datetime] = mapped_column(default=sa.func.now(), onupdate=sa.func.now())
 
     __table_args__ = (UniqueConstraint('name'),)
 
 class VaccineRecord(Base):
     __tablename__ = 'vaccine_records'
-    id = Column(Integer, primary_key=True)
-    family_member_id = Column(Integer, ForeignKey('family_members.id'))
-    location = Column(String)
-    dosage = Column(String)
-    vaccine_id = Column(Integer, ForeignKey('vaccines.id'))
-    date = Column(Date)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    family_member_id: Mapped[int] = mapped_column(ForeignKey('family_members.id'))
+    location: Mapped[str]
+    dosage: Mapped[Optional[str]]
+    vaccine_id: Mapped[int] = mapped_column(ForeignKey('vaccines.id'))
+    date: Mapped[date]
+    created_at: Mapped[datetime] = mapped_column(default=sa.func.now())
+    updated_at: Mapped[datetime] = mapped_column(default=sa.func.now(), onupdate=sa.func.now())
 
-    family_member = relationship('FamilyMember', back_populates='vaccine_records')
-    vaccine = relationship('Vaccine', back_populates='vaccine_records')
+    vaccine: Mapped["Vaccine"] =  relationship()
+    family_members: Mapped["FamilyMember"] = relationship(back_populates='vaccine_records')
 
     __table_args__ = (UniqueConstraint('family_member_id', 'vaccine_id'),)
