@@ -2,12 +2,12 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Login from './components/login';
-import About from './components/about';
-import Contact from './components/contact';
-import FamilyMemberLog from './components/familymemberlog';
-import AddVaccine from './components/addvaccine';
-import ViewRecord from './components/viewrecord';
+import Login from './components/Login';
+import About from './components/About';
+import Contact from './components/Contact';
+import FamilyMemberLog from './components/FamilyMemberLog';
+import AddVaccine from './components/AddVaccine';
+import ViewRecord from './components/ViewRecord';
 
 
 function App() {
