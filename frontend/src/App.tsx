@@ -1,19 +1,18 @@
-import React from 'react';
-import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Login from './components/Login';
-import About from './components/About';
-import Contact from './components/Contact';
-import FamilyMemberLog from './components/FamilyMemberLog';
-import AddVaccine from './components/AddVaccine';
-import ViewRecord from './components/ViewRecord';
-
+import Login from "./components/Login";
+import About from "./components/About";
+import Contact from "./components/Contact";
+import FamilyMemberLog from "./components/FamilyMemberLog";
+import AddVaccine from "./components/AddVaccine";
+import ViewRecord from "./components/ViewRecord";
 
 function App() {
   return (
     <BrowserRouter>
-     <Routes>
+      <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

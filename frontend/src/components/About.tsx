@@ -1,7 +1,7 @@
-import { Component } from "react";
+import React from "react";
 
-class About extends Component {
-    render() {
+function About() {
+   
         return (
         <div>
             <h1>About</h1>
@@ -9,6 +9,6 @@ class About extends Component {
         );
     }
   
-}
+
 
 export default About;
