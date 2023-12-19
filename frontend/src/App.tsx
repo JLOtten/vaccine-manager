@@ -8,6 +8,8 @@ import Contact from "./components/Contact";
 import FamilyMemberLog from "./components/FamilyMemberLog";
 import AddVaccine from "./components/AddVaccine";
 import ViewRecord from "./components/ViewRecord";
+import Home from "./components/Home";
+import ResponsiveAppBar from "./components/ResponsiveAppBar";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/familyMemberLog" element={<FamilyMemberLog />} />
         <Route path="/addVaccine" element={<AddVaccine />} />
         <Route path="/viewRecord" element={<ViewRecord />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/responsiveAppBar" element={<ResponsiveAppBar />} />
       </Routes>
     </BrowserRouter>
   );
