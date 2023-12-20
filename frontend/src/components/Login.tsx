@@ -31,7 +31,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 const loginImage = '/loginImage.jpg';
 
-export default function SignInSide() {
+function SignInSide() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -129,3 +129,16 @@ export default function SignInSide() {
   );
 }
 
+function Login () {
+   
+  return (
+    <div>
+      <h1>Home</h1>
+      <SignInSide />
+    </div>
+  );
+}
+
+
+
+export default Login;
