@@ -63,6 +63,20 @@ function MyForm() {
         fullWidth
         margin="normal"
       />
+      {/*import React from 'react';
+import DatePicker from '@mui/lab/DatePicker';
+
+function MyForm() {
+  return (
+    <form>
+      <DatePicker
+        label="Date of Birth"
+        renderInput={(params) => <TextField {...params} />}
+      />
+    </form>
+  );
+}
+   */}
       <Button
         variant="contained"
         color="primary"
