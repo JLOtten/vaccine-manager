@@ -12,7 +12,7 @@ function Home() {
       <nav>
         <ResponsiveAppBar />
       </nav>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ color: '#0f274a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <h1>Hi Username!</h1>
         <h1>Welcome to your vaccine manager!</h1>
         <h2>Choose an option below:</h2>

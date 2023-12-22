@@ -38,26 +38,27 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: '#fafafa' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <VaccinesIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <VaccinesIcon sx={{ color:'#0f274a', display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
             component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
+              
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              fontFamily: "'Poppins', sans-serif",
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: '#0f274a',
               textDecoration: 'none',
             }}
           >
-            My Vaccine Manager
+            MY VACCINE MANAGER
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -87,10 +88,11 @@ function ResponsiveAppBar() {
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: 'block', md: 'none' },
+                justifyContent: 'flex-end',
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem sx={{ justifyContent: 'flex-end', color: '#0f274a' }} key={page} onClick={handleCloseNavMenu}>
                   <Link to={`/${page.toLowerCase()}`}>
                   <Typography textAlign="center">{page}</Typography>
                   </Link>
@@ -108,14 +110,14 @@ function ResponsiveAppBar() {
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "'Poppins', sans-serif",
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: '#0fa274a',
               textDecoration: 'none',
             }}
             > 
-            My Vaccine Manager
+            MY VACCINE MANAGER
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -154,7 +156,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem sx={{ justifyContent: 'flex-end', color: '#0f274a' }} key={setting} onClick={handleCloseUserMenu}>
                   <Link to={`/${setting.toLowerCase()}`}>
                   <Typography textAlign="center">{setting}</Typography>
                   </Link>
