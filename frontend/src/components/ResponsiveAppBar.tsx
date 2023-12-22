@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 
 const pages = ['Home', 'About', 'Contact', 'Log Out'];
@@ -91,7 +91,9 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Link to={`/${page.toLowerCase()}`}>
                   <Typography textAlign="center">{page}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -122,7 +124,9 @@ function ResponsiveAppBar() {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
+              <Link to={`/${page.toLowerCase()}`}>
                 {page}
+              </Link>
               </Button>
             ))}
           </Box>
@@ -151,7 +155,9 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Link to={`/${setting.toLowerCase()}`}>
                   <Typography textAlign="center">{setting}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
