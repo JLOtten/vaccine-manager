@@ -1,5 +1,5 @@
 # vaccine-manager
-A personal/family vaccination record application
+A personal/family vaccination record application based on UX Case Study with complete Figma hi-fi prototype. 
 
 ## developing
 
