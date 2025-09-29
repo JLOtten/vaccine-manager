@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22, 24]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v5
       - name: Install pnpm
@@ -31,4 +30,4 @@ jobs:
           cache-dependency-path: "./frontend/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build --if-present
-       - run: pnpm test -- --ci
+      - run: pnpm test -- --ci
