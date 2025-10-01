@@ -1,17 +1,12 @@
-import React from "react";
-import ResponsiveAppBar from "./ResponsiveAppBar";
-import './Home.css';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import ArticleIcon from '@mui/icons-material/Article';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import './Home.css';
 
 function Home() {
 
   return (
     <div>
-      <nav>
-        <ResponsiveAppBar />
-      </nav>
       <div style={{ color: '#0f274a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <h1>Hi Username!</h1>
         <h1>Welcome to your vaccine manager!</h1>
