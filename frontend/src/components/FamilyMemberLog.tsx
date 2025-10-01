@@ -1,14 +1,12 @@
-import * as React from "react";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import ResponsiveAppBar from "./ResponsiveAppBar";
+import TextField from "@mui/material/TextField";
 
 function createData(name: string, dateOfBirth: string) {
   return { name, dateOfBirth };
@@ -46,17 +44,11 @@ function BasicTable() {
   );
 }
 
-
 function MyForm() {
   return (
     <form>
       <h1>Enter New Family Member</h1>
-      <TextField
-        label="Name"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
+      <TextField label="Name" variant="outlined" fullWidth margin="normal" />
       <TextField
         label="Date of Birth"
         variant="outlined"
@@ -77,24 +69,26 @@ function MyForm() {
   );
 }
    */}
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-      >
+      <Button variant="contained" color="primary" type="submit">
         Add Family Member
       </Button>
     </form>
   );
 }
 
-
-
 function FamilyMemberLog() {
   return (
     <div>
-      <ResponsiveAppBar />
-      <h1 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',justifyContent: 'center' }}>Family Member Log</h1>
+      <h1
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Family Member Log
+      </h1>
       <BasicTable />
       <MyForm />
     </div>
