@@ -1,5 +1,11 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import "./App.css";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 
@@ -50,10 +56,10 @@ function App() {
           <Route path="/familyMemberLog" element={<FamilyMemberLog />} />
           <Route path="/addVaccine" element={<AddVaccine />} />
           <Route path="/viewRecord" element={<ViewRecord />} />
-          
+
           {/* Redirect /home to / */}
           <Route path="/home" element={<Navigate to="/" replace />} />
-          
+
           {/* 404 catch-all */}
           <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Route>
