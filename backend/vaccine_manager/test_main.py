@@ -7,8 +7,8 @@ from sqlalchemy.pool import StaticPool
 
 SQLALCHEMY_DATABASE_URL = "sqlite://"
 
-import models
-from main import app, get_db
+from . import models
+from .main import app, get_db
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

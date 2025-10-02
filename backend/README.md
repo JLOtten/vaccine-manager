@@ -2,17 +2,23 @@
 
 ### setup virtual environment
 
-```
-python -m venv env
-source env/bin/activate
-pip install -r requirements.txt
-```
+```bash
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-just using `pip` for now...
+# Install dependencies and create virtual environment
+uv sync
+
+# Activate the virtual environment
+source .venv/bin/activate
+```
 
 ### testing
 
-```
-# set PYTHONPATH, assuming running from `backend` dir
-PYTHONPATH=$PWD/vaccine_manager pytest
+```bash
+# Run tests with uv
+uv run pytest
+
+# Or run with PYTHONPATH set
+PYTHONPATH=$PWD/vaccine_manager uv run pytest
 ```
