@@ -41,7 +41,7 @@ def create_family(
 ):
     # make sure the user exists (or throw exception, TOOD: make this exception nicer)
     user = db.query(models.User).filter_by(id=user_id).one()
-    db_family = models.Family(**family.dict())
+    db_family = models.Family(**family.model_dump())
     db_family.user_id = user.id
     db.add(db_family)
     db.commit()
