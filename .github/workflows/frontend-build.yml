@@ -3,8 +3,14 @@ name: frontend-build
 on:
   push:
     branches: ["main"]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-build.yml"
   pull_request:
     branches: ["main"]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-build.yml"
 
 defaults:
   run:
@@ -29,5 +35,8 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "./frontend/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
+      - name: Check Prettier formatting
+        run: pnpm run format:check
+        # This step ensures all files are properly formatted before build/test
       - run: pnpm run build --if-present
       - run: pnpm test -- --ci

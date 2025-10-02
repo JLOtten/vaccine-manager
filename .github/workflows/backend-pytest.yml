@@ -6,8 +6,14 @@ name: backend
 on:
   push:
     branches: ["main"]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-pytest.yml"
   pull_request:
     branches: ["main"]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-pytest.yml"
 
 permissions:
   contents: read
