@@ -15,6 +15,7 @@ SQLALCHEMY_DATABASE_URL = "sqlite://"
 # Set test environment variables before importing modules
 os.environ["COOKIE_SECRET_KEY"] = "test-secret-key-for-testing-only"
 os.environ["CORS_ORIGINS"] = '["http://localhost:3000"]'  # JSON array format
+os.environ["SECURE_COOKIES"] = "false"  # Disable secure cookies for testing
 
 from vaccine_manager import auth, models  # noqa: E402
 from vaccine_manager.main import app  # noqa: E402
@@ -46,7 +47,8 @@ def reset_database():
 
 app.dependency_overrides[auth.get_db] = override_get_db
 
-client = TestClient(app)
+# Create TestClient with follow_redirects to handle cookies properly
+client = TestClient(app, follow_redirects=True)
 
 
 def register_user(
