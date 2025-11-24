@@ -28,7 +28,7 @@ test-backend:
 # Run frontend tests
 test-frontend:
 	@echo "Running frontend tests..."
-	cd frontend && CI=true pnpm test
+	cd frontend && pnpm test:ci
 
 # Run all linting
 lint: lint-backend lint-frontend
