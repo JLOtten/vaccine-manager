@@ -37,7 +37,6 @@ jobs:
       - name: Install frontend dependencies
         run: cd frontend && pnpm install --frozen-lockfile
 
-      # Run CI (linting + tests)
+      # Run CI (linting + tests for both backend and frontend)
       - name: Run CI
         run: make ci
-
