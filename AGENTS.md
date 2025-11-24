@@ -34,6 +34,45 @@ pnpm start
 # Application available at http://localhost:3000
 ```
 
+### Both Services
+
+```bash
+make run
+# Starts both backend (port 9090) and frontend (port 3000) servers
+```
+
+## Pre-Commit Checklist
+
+**IMPORTANT**: Before committing code, ensure the following:
+
+1. **Format all code**:
+
+   ```bash
+   make format
+   # Or format individually:
+   # make format-backend
+   # make format-frontend
+   ```
+
+2. **Run all tests**:
+
+   ```bash
+   make test
+   # Or test individually:
+   # make test-backend
+   # make test-frontend
+   ```
+
+3. **Run linting** (optional but recommended):
+   ```bash
+   make lint
+   # Or lint individually:
+   # make lint-backend
+   # make lint-frontend
+   ```
+
+The `make ci` target runs both linting and tests, which is useful for CI/CD pipelines.
+
 ## Code Structure
 
 ### Backend (`backend/`)
