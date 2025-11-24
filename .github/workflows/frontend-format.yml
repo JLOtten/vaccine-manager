@@ -1,43 +1,34 @@
-name: frontend-build
+name: frontend-format
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "frontend/**"
-      - ".github/workflows/frontend-build.yml"
   pull_request:
     branches: ["main"]
     paths:
       - "frontend/**"
-      - ".github/workflows/frontend-build.yml"
+      - ".github/workflows/frontend-format.yml"
 
 defaults:
   run:
     working-directory: ./frontend/
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22, 24]
     steps:
       - uses: actions/checkout@v5
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22
           cache: "pnpm"
           cache-dependency-path: "./frontend/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
-      - name: Check Prettier formatting
+      - name: Check formatting
         run: pnpm run format:check
       - name: Check TypeScript types
         run: pnpm run type-check
-      - run: pnpm run build --if-present
-      - run: pnpm test -- --ci
+

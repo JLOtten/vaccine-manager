@@ -19,7 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4.3",
-    "flake8>=6.1.0",
+    "ruff>=0.1.0",
     "sqlalchemy2-stubs>=0.0.2a36",
 ]
 
@@ -30,6 +30,6 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "pytest>=7.4.3",
-    "flake8>=6.1.0", 
+    "ruff>=0.1.0",
     "sqlalchemy2-stubs>=0.0.2a36",
 ]
