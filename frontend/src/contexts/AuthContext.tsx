@@ -1,11 +1,11 @@
 import {
   createContext,
+  ReactNode,
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from "react";
-import { api, Token } from "../api";
+import { api } from "../api";
 
 interface AuthContextType {
   isAuthenticated: boolean;
