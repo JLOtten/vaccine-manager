@@ -23,6 +23,10 @@ class Settings(BaseSettings):
 
     secure_cookies: bool = True
 
+    # Database Settings
+    # Defaults to SQLite for development, but can be overridden via DATABASE_URL env var
+    database_url: str = "sqlite:///./sql_app.db"
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, v):
