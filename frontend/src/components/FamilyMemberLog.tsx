@@ -12,11 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import { api, FamilyMember } from "../api";
 
-function BasicTable({
-  familyMembers,
-}: {
-  familyMembers: FamilyMember[];
-}) {
+function BasicTable({ familyMembers }: { familyMembers: FamilyMember[] }) {
   return (
     <TableContainer component={Paper}>
       <h1>Currently Tracked Members</h1>
@@ -53,11 +49,7 @@ function BasicTable({
   );
 }
 
-function MyForm({
-  onMemberAdded,
-}: {
-  onMemberAdded: () => void;
-}) {
+function MyForm({ onMemberAdded }: { onMemberAdded: () => void }) {
   const [name, setName] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [sex, setSex] = useState("");
@@ -80,14 +72,19 @@ function MyForm({
       setSex("");
       onMemberAdded();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add family member");
+      setError(
+        err instanceof Error ? err.message : "Failed to add family member",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}
+    >
       <h1>Enter New Family Member</h1>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -155,7 +152,9 @@ function FamilyMemberLog() {
       const members = await api.getFamilyMembers();
       setFamilyMembers(members);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load family members");
+      setError(
+        err instanceof Error ? err.message : "Failed to load family members",
+      );
     } finally {
       setLoading(false);
     }

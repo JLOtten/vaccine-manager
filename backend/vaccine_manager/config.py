@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import List
 
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -23,6 +22,16 @@ class Settings(BaseSettings):
     cors_origins: list[str]
 
     secure_cookies: bool = True
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v):
+        """Parse comma-separated CORS origins string into a list."""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        if isinstance(v, list):
+            return v
+        return v
 
     @model_validator(mode="after")
     def validate_secret_key(self):

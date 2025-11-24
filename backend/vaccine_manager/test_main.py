@@ -1,5 +1,6 @@
 # testing code from: https://fastapi.tiangolo.com/advanced/testing-database/
 # minimally adapted for this project
+import os
 from uuid import UUID
 
 import pytest
@@ -11,8 +12,12 @@ from sqlalchemy.pool import StaticPool
 
 SQLALCHEMY_DATABASE_URL = "sqlite://"
 
-from . import models
-from .main import app, get_db
+# Set test environment variables before importing modules
+os.environ["COOKIE_SECRET_KEY"] = "test-secret-key-for-testing-only"
+os.environ["CORS_ORIGINS"] = '["http://localhost:3000"]'  # JSON array format
+
+from . import auth, models  # noqa: E402
+from .main import app  # noqa: E402
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -39,60 +44,92 @@ def reset_database():
     models.Base.metadata.drop_all(bind=engine)
 
 
-app.dependency_overrides[get_db] = override_get_db
+app.dependency_overrides[auth.get_db] = override_get_db
 
 client = TestClient(app)
 
 
-def test_create_and_get_user():
-    """Test creating and retrieving a user"""
+def register_user(
+    username: str = "testuser", password: str = "testpass", name: str = "Test User"
+):
+    """Helper function to register a user and return the client with cookies."""
     response = client.post(
-        "/user",
-        json={"email": "christian@example.com", "name": "christian"},
+        "/register",
+        json={"username": username, "password": password, "name": name},
     )
     assert response.status_code == 200, response.text
-    data = response.json()
-    assert data["email"] == "christian@example.com"
-    assert data["name"] == "christian"
-    assert "id" in data
-    # Verify ID is a valid UUID
-    user_id = UUID(data["id"])
-    assert isinstance(user_id, UUID)
+    return response
 
-    # Get the user
+
+def test_register_and_get_user():
+    """Test registering and retrieving a user"""
+    response = register_user("christian", "password123", "Christian")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert "access_token" in data
+    assert "token_type" in data
+
+    # Get the user (should work with cookie from registration)
     response = client.get("/user")
     assert response.status_code == 200, response.text
     data = response.json()
-    assert data["email"] == "christian@example.com"
-    assert data["name"] == "christian"
-    assert UUID(data["id"]) == user_id
+    assert data["username"] == "christian"
+    assert data["name"] == "Christian"
+    assert "id" in data
+    UUID(data["id"])  # Verify ID is a valid UUID
 
 
-def test_create_user_duplicate():
-    """Test that creating a second user fails"""
-    # Create first user
-    response = client.post(
-        "/user",
-        json={"email": "test@example.com", "name": "test"},
-    )
+def test_register_duplicate_username():
+    """Test that registering with duplicate username fails"""
+    # Register first user
+    response = register_user("testuser", "password123")
     assert response.status_code == 200, response.text
 
-    # Try to create second user (should fail)
+    # Try to register with same username (should fail)
     response = client.post(
-        "/user",
-        json={"email": "test2@example.com", "name": "test2"},
+        "/register",
+        json={"username": "testuser", "password": "different", "name": "Different"},
     )
     assert response.status_code == 400, response.text
-    assert "already exists" in response.json()["detail"].lower()
+    assert "already registered" in response.json()["detail"].lower()
+
+
+def test_login():
+    """Test login functionality"""
+    # Register a user first
+    register_user("loginuser", "password123", "Login User")
+
+    # Login with correct credentials
+    response = client.post(
+        "/login",
+        json={"username": "loginuser", "password": "password123"},
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert "access_token" in data
+
+    # Login with wrong password
+    response = client.post(
+        "/login",
+        json={"username": "loginuser", "password": "wrongpassword"},
+    )
+    assert response.status_code == 401, response.text
+
+    # Login with non-existent user
+    response = client.post(
+        "/login",
+        json={"username": "nonexistent", "password": "password"},
+    )
+    assert response.status_code == 401, response.text
 
 
 def test_create_and_get_family_member():
     """Test creating and retrieving family members"""
-    # First create a user
-    response = client.post(
-        "/user",
-        json={"email": "parent@example.com", "name": "Parent"},
-    )
+    # Register a user first (this sets the auth cookie)
+    register_user("parent", "password123", "Parent")
+
+    # Get user to verify authentication
+    response = client.get("/user")
     assert response.status_code == 200, response.text
     user_data = response.json()
     user_id = UUID(user_data["id"])
@@ -125,12 +162,8 @@ def test_create_and_get_family_member():
 
 def test_create_vaccine_record():
     """Test creating a vaccine record for a family member"""
-    # Create user
-    response = client.post(
-        "/user",
-        json={"email": "user@example.com", "name": "User"},
-    )
-    assert response.status_code == 200, response.text
+    # Register a user first (this sets the auth cookie)
+    register_user("user", "password123", "User")
 
     # Create family member
     response = client.post(
@@ -200,6 +233,9 @@ def test_create_vaccine_record():
 
 def test_get_vaccines():
     """Test getting the list of vaccines"""
+    # Register a user first (vaccines endpoint requires authentication)
+    register_user("vaccineuser", "password123")
+
     response = client.get("/vaccines")
     assert response.status_code == 200, response.text
     vaccines = response.json()
@@ -209,3 +245,16 @@ def test_get_vaccines():
         assert "id" in vaccine
         UUID(vaccine["id"])  # Should be a valid UUID
         assert "name" in vaccine
+
+
+def test_unauthenticated_access():
+    """Test that unauthenticated requests return 401"""
+    # Try to access protected endpoint without authentication
+    response = client.get("/user")
+    assert response.status_code == 401, response.text
+
+    response = client.get("/family_members")
+    assert response.status_code == 401, response.text
+
+    response = client.get("/vaccines")
+    assert response.status_code == 401, response.text

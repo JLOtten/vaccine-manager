@@ -63,7 +63,7 @@ export interface VaccineRecordCreate {
 
 async function fetchAPI<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit,
 ): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -82,7 +82,9 @@ async function fetchAPI<T>(
   }
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: response.statusText }));
+    const error = await response
+      .json()
+      .catch(() => ({ detail: response.statusText }));
     throw new Error(error.detail || `HTTP error! status: ${response.status}`);
   }
 
@@ -114,9 +116,7 @@ export const api = {
   // Family member endpoints
   getFamilyMembers: (): Promise<FamilyMember[]> =>
     fetchAPI<FamilyMember[]>("/family_members"),
-  createFamilyMember: (
-    member: FamilyMemberCreate
-  ): Promise<FamilyMember> =>
+  createFamilyMember: (member: FamilyMemberCreate): Promise<FamilyMember> =>
     fetchAPI<FamilyMember>("/family_members", {
       method: "POST",
       body: JSON.stringify(member),
@@ -128,18 +128,17 @@ export const api = {
   // Vaccine record endpoints
   getVaccineRecords: (familyMemberId: string): Promise<VaccineRecord[]> =>
     fetchAPI<VaccineRecord[]>(
-      `/family_members/${familyMemberId}/vaccine_records`
+      `/family_members/${familyMemberId}/vaccine_records`,
     ),
   createVaccineRecord: (
     familyMemberId: string,
-    record: VaccineRecordCreate
+    record: VaccineRecordCreate,
   ): Promise<VaccineRecord> =>
     fetchAPI<VaccineRecord>(
       `/family_members/${familyMemberId}/vaccine_records`,
       {
         method: "POST",
         body: JSON.stringify(record),
-      }
+      },
     ),
 };
-

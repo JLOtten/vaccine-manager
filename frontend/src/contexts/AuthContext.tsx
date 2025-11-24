@@ -1,10 +1,21 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import { api, Token } from "../api";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, name: string, email: string | undefined, password: string) => Promise<void>;
+  register: (
+    username: string,
+    name: string,
+    email: string | undefined,
+    password: string,
+  ) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
 }
@@ -44,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     username: string,
     name: string,
     email: string | undefined,
-    password: string
+    password: string,
   ): Promise<void> => {
     try {
       await api.register({ username, name, email, password });
@@ -67,7 +78,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, register, logout, loading }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login, register, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -80,4 +93,3 @@ export function useAuth(): AuthContextType {
   }
   return context;
 }
-

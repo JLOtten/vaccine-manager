@@ -65,7 +65,9 @@ function AddVaccine() {
       // Optionally navigate or show success message
       alert("Vaccine record added successfully!");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add vaccine record");
+      setError(
+        err instanceof Error ? err.message : "Failed to add vaccine record",
+      );
     } finally {
       setLoading(false);
     }

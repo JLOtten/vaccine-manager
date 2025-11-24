@@ -48,7 +48,11 @@ function ViewRecord() {
           const records = await api.getVaccineRecords(selectedFamilyMemberId);
           setVaccineRecords(records);
         } catch (err) {
-          setError(err instanceof Error ? err.message : "Failed to load vaccine records");
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Failed to load vaccine records",
+          );
           setVaccineRecords([]);
         } finally {
           setLoading(false);
@@ -66,7 +70,7 @@ function ViewRecord() {
   };
 
   const selectedFamilyMember = familyMembers.find(
-    (m) => m.id === selectedFamilyMemberId
+    (m) => m.id === selectedFamilyMemberId,
   );
 
   return (
