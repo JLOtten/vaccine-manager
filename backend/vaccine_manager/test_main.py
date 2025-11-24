@@ -3,6 +3,7 @@
 from uuid import UUID
 
 import pytest
+import uuid6
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -182,9 +183,8 @@ def test_create_vaccine_record():
     assert UUID(records[0]["id"]) == record_id
 
     # Test that creating a record with invalid family_member_id fails
-    from uuid import uuid4
-
-    fake_member_id = uuid4()
+    # Use uuid7 to generate a valid UUIDv7 that doesn't exist in the database
+    fake_member_id = uuid6.uuid7()
     response = client.post(
         f"/family_members/{fake_member_id}/vaccine_records",
         json={
