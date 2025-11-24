@@ -6,9 +6,9 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from . import models
-from .config import settings
-from .db import SessionLocal
+from vaccine_manager import models
+from vaccine_manager.config import settings
+from vaccine_manager.db import SessionLocal
 
 # Password hashing context - using scrypt
 pwd_context = CryptContext(schemes=["scrypt"], deprecated="auto")

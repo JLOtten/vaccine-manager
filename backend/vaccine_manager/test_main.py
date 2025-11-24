@@ -16,8 +16,8 @@ SQLALCHEMY_DATABASE_URL = "sqlite://"
 os.environ["COOKIE_SECRET_KEY"] = "test-secret-key-for-testing-only"
 os.environ["CORS_ORIGINS"] = '["http://localhost:3000"]'  # JSON array format
 
-from . import auth, models  # noqa: E402
-from .main import app  # noqa: E402
+from vaccine_manager import auth, models  # noqa: E402
+from vaccine_manager.main import app  # noqa: E402
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

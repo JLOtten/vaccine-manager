@@ -5,9 +5,9 @@ from fastapi import Depends, FastAPI, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from . import auth, models, pydantic_models
-from .config import settings
-from .db import engine
+from vaccine_manager import auth, models, pydantic_models
+from vaccine_manager.config import settings
+from vaccine_manager.db import engine
 
 models.Base.metadata.create_all(bind=engine)
 
