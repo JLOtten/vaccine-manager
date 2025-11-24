@@ -4,8 +4,8 @@ from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from vaccine_manager import auth, models, pydantic_models
@@ -26,39 +26,26 @@ app.add_middleware(
 )
 
 # Serve static files (frontend build)
-static_dir = Path(__file__).parent.parent.parent / "static"
+# Try multiple possible locations for static directory
+# Docker: /app/vaccine_manager/main.py -> /app/static (parent.parent)
+# Local dev: backend/vaccine_manager/main.py -> project_root/static (parent.parent.parent)
+# Also check frontend/public for local development
+_base_paths = [
+    Path(__file__).parent.parent / "static",  # Docker: /app/static
+    Path(__file__).parent.parent.parent / "static",  # Local: project_root/static
+    Path(__file__).parent.parent.parent.parent
+    / "frontend"
+    / "public",  # Local: frontend/public
+]
+static_dir = Path(__file__).parent.parent / "static"  # Default to Docker structure
+for path in _base_paths:
+    if path.exists():
+        static_dir = path
+        break
+
 if static_dir.exists():
     # Mount static assets (JS, CSS, images, etc.)
     app.mount("/assets", StaticFiles(directory=static_dir / "assets"), name="assets")
-
-    # Serve other static files (favicon, manifest, etc.)
-    @app.get("/favicon.ico")
-    async def favicon():
-        favicon_path = static_dir / "favicon.ico"
-        if favicon_path.exists():
-            return FileResponse(favicon_path)
-        raise HTTPException(status_code=404)
-
-    @app.get("/manifest.json")
-    async def manifest():
-        manifest_path = static_dir / "manifest.json"
-        if manifest_path.exists():
-            return FileResponse(manifest_path)
-        raise HTTPException(status_code=404)
-
-    @app.get("/logo192.png")
-    async def logo192():
-        logo_path = static_dir / "logo192.png"
-        if logo_path.exists():
-            return FileResponse(logo_path)
-        raise HTTPException(status_code=404)
-
-    @app.get("/logo512.png")
-    async def logo512():
-        logo_path = static_dir / "logo512.png"
-        if logo_path.exists():
-            return FileResponse(logo_path)
-        raise HTTPException(status_code=404)
 
 
 # Authentication endpoints (public)
@@ -234,7 +221,7 @@ def get_vaccine_records(
     )
 
 
-# Serve index.html for all non-API routes (SPA routing) - MUST be last
+# Serve static files and index.html for all non-API routes (SPA routing) - MUST be last
 if static_dir.exists():
 
     @app.get("/{full_path:path}")
@@ -243,6 +230,12 @@ if static_dir.exists():
         if full_path.startswith(("api/", "assets/", "docs", "openapi.json", "redoc")):
             raise HTTPException(status_code=404)
 
+        # Check if the requested path is a static file
+        static_file_path = static_dir / full_path
+        if static_file_path.is_file() and static_file_path.exists():
+            return FileResponse(static_file_path)
+
+        # Otherwise serve index.html for SPA routing
         index_path = static_dir / "index.html"
         if index_path.exists():
             return FileResponse(index_path)

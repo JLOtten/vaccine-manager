@@ -28,16 +28,17 @@ RUN apt-get update && apt-get install -y \
 # Install uv
 RUN pip install uv
 
-# Copy backend dependencies
-COPY backend/pyproject.toml backend/uv.lock* ./
+# Copy backend files needed for package building
+COPY backend/pyproject.toml backend/uv.lock* backend/README.md ./
+COPY backend/vaccine_manager/ ./vaccine_manager/
 
-# Install Python dependencies
+# Install Python dependencies (requires package directory to be present)
 RUN uv sync --frozen
 
 # Install PostgreSQL driver (psycopg2-binary) for production database support
 RUN uv pip install psycopg2-binary
 
-# Copy backend source
+# Copy rest of backend directory structure (in case there are other files needed)
 COPY backend/ ./backend/
 
 # Copy built frontend static files from frontend-builder
