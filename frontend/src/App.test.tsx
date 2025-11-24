@@ -1,30 +1,35 @@
-import "@testing-library/jest-dom";
+import { test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 import FamilyMemberLog from "./components/FamilyMemberLog";
 import { AuthProvider } from "./contexts/AuthContext";
+import * as apiModule from "./api";
 
 // Mock the API module
-jest.mock("./api", () => ({
-  api: {
-    getUser: jest.fn(),
-    getFamilyMembers: jest.fn(() => Promise.resolve([])),
-    getVaccines: jest.fn(() => Promise.resolve([])),
-    getVaccineRecords: jest.fn(() => Promise.resolve([])),
-    login: jest.fn(),
-    register: jest.fn(),
-    logout: jest.fn(),
-  },
-}));
+vi.mock("./api", () => {
+  const mockApi = {
+    getUser: vi.fn(),
+    getFamilyMembers: vi.fn(() => Promise.resolve([])),
+    getVaccines: vi.fn(() => Promise.resolve([])),
+    getVaccineRecords: vi.fn(() => Promise.resolve([])),
+    login: vi.fn(),
+    register: vi.fn(),
+    logout: vi.fn(),
+  };
+  return {
+    api: mockApi,
+  };
+});
 
 // Mock fetch globally
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 test("renders login page when not authenticated", async () => {
   // Mock getUser to fail (not authenticated)
-  const { api } = require("./api");
-  api.getUser.mockRejectedValueOnce(new Error("Unauthorized"));
+  vi.mocked(apiModule.api.getUser).mockRejectedValueOnce(
+    new Error("Unauthorized"),
+  );
 
   render(<App />);
 
@@ -35,8 +40,7 @@ test("renders login page when not authenticated", async () => {
 
 test("renders home page when authenticated", async () => {
   // Mock getUser to succeed (authenticated)
-  const { api } = require("./api");
-  api.getUser.mockResolvedValueOnce({
+  vi.mocked(apiModule.api.getUser).mockResolvedValueOnce({
     id: "123",
     username: "testuser",
     name: "Test User",
@@ -52,8 +56,7 @@ test("renders home page when authenticated", async () => {
 });
 
 test("renders family member log page", async () => {
-  const { api } = require("./api");
-  api.getFamilyMembers.mockResolvedValueOnce([]);
+  vi.mocked(apiModule.api.getFamilyMembers).mockResolvedValueOnce([]);
 
   render(
     <AuthProvider>
