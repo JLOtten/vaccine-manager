@@ -10,10 +10,13 @@ dependencies = [
     "sqlalchemy>=2.0.23",
     "sqlalchemy-utils>=0.41.1",
     "pydantic>=2.10.0",
+    "pydantic-settings>=2.0.0",
     "python-dotenv>=1.0.0",
     "pyyaml>=6.0.1",
     "httpx>=0.28.1",
     "uuid6>=2023.5.2",
+    "passlib>=1.7.4",
+    "python-jose[cryptography]>=3.3.0",
 ]
 
 [project.optional-dependencies]

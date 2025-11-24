@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import ArticleIcon from "@mui/icons-material/Article";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import "./Home.css";
 
 function Home() {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div
@@ -30,7 +33,7 @@ function Home() {
         >
           <button
             className="card-button"
-            onClick={() => console.log("Enter New Family Member clicked")}
+            onClick={() => navigate("/familyMemberLog")}
           >
             <div className="card-content">
               <li>Enter New Family Member</li>
@@ -39,7 +42,7 @@ function Home() {
           </button>
           <button
             className="card-button"
-            onClick={() => console.log("View Vaccine Record clicked")}
+            onClick={() => navigate("/viewRecord")}
           >
             <div className="card-content">
               <li>View Vaccine Record</li>
@@ -49,7 +52,7 @@ function Home() {
 
           <button
             className="card-button"
-            onClick={() => console.log("Record New Vaccine clicked")}
+            onClick={() => navigate("/addVaccine")}
           >
             <div className="card-content">
               <li>Record New Vaccine</li>
