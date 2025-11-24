@@ -52,14 +52,18 @@ class User(Base):
     id: Mapped[UUID] = mapped_column(
         GUID(), primary_key=True, default=lambda: uuid6.uuid7()
     )
+    username: Mapped[str]
     name: Mapped[str]
-    email: Mapped[str]
+    email: Mapped[Optional[str]]
+    hashed_password: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(default=sa.func.now())
     updated_at: Mapped[datetime] = mapped_column(
         default=sa.func.now(), onupdate=sa.func.now()
     )
 
     family_members: Mapped[List["FamilyMember"]] = relationship(back_populates="user")
+
+    __table_args__ = (UniqueConstraint("username"),)
 
 
 class FamilyMember(Base):

@@ -6,17 +6,35 @@ from pydantic import BaseModel, ConfigDict
 
 
 class UserBase(BaseModel):
+    username: str
     name: str
-    email: str
+    email: Optional[str] = None
 
 
 class UserCreate(UserBase):
-    pass
+    password: str
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class UserRegister(BaseModel):
+    username: str
+    name: str
+    email: Optional[str] = None
+    password: str
 
 
 class User(UserBase):
     id: UUID
     model_config = ConfigDict(from_attributes=True)
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
 
 
 class FamilyMemberBase(BaseModel):
