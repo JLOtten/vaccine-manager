@@ -1,8 +1,9 @@
-.PHONY: help test lint ci test-backend test-frontend lint-backend lint-frontend format format-backend format-frontend
+.PHONY: help test lint ci test-backend test-frontend lint-backend lint-frontend format format-backend format-frontend run
 
 # Default target
 help:
 	@echo "Available targets:"
+	@echo "  run             - Start both backend and frontend servers"
 	@echo "  ci              - Run linting + tests (for CI/CD)"
 	@echo "  test            - Run all tests (backend + frontend)"
 	@echo "  test-backend    - Run backend tests"
@@ -13,6 +14,17 @@ help:
 	@echo "  format          - Format all code (backend + frontend)"
 	@echo "  format-backend  - Format backend code"
 	@echo "  format-frontend - Format frontend code"
+
+# Start both backend and frontend servers
+run:
+	@echo "Starting backend and frontend servers..."
+	@echo "Backend will be available at http://localhost:9090"
+	@echo "Frontend will be available at http://localhost:3000"
+	@echo "Press Ctrl+C to stop both servers"
+	@trap 'kill 0' EXIT; \
+	(cd backend && make run) & \
+	(cd frontend && pnpm start) & \
+	wait
 
 # CI target: run linting then tests
 ci: lint test
