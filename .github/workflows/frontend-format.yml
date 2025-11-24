@@ -6,10 +6,7 @@ on:
     paths:
       - "frontend/**"
       - ".github/workflows/frontend-format.yml"
-
-defaults:
-  run:
-    working-directory: ./frontend/
+      - "Makefile"
 
 jobs:
   check:
@@ -26,9 +23,8 @@ jobs:
           node-version: 22
           cache: "pnpm"
           cache-dependency-path: "./frontend/pnpm-lock.yaml"
-      - run: pnpm install --frozen-lockfile
-      - name: Check formatting
-        run: pnpm run format:check
-      - name: Check TypeScript types
-        run: pnpm run type-check
+      - name: Install frontend dependencies
+        run: cd frontend && pnpm install --frozen-lockfile
+      - name: Check frontend formatting
+        run: make lint-frontend
 

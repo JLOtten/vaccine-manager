@@ -6,10 +6,7 @@ on:
     paths:
       - "backend/**"
       - ".github/workflows/backend-format.yml"
-
-defaults:
-  run:
-    working-directory: backend/
+      - "Makefile"
 
 jobs:
   check:
@@ -20,6 +17,8 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
-      - run: uv sync
-      - run: uv run ruff format --check .
+      - name: Install backend dependencies
+        run: cd backend && uv sync
+      - name: Check backend formatting
+        run: make lint-backend
 
