@@ -19,9 +19,19 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 1440  # 1 day
 
     # CORS Settings
-    cors_origins: list[str]
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "https://vaccine-manager.fly.dev",
+    ]
 
     secure_cookies: bool = True
+
+    # Database Settings
+    # SQLite database path
+    # Defaults to ./sql_app.db for local development
+    # On Fly.io, set DATABASE_URL="sqlite:////data/sql_app.db" to use persistent volume
+    # Can be overridden via DATABASE_URL env var
+    database_url: str = "sqlite:///./sql_app.db"
 
     @field_validator("cors_origins", mode="before")
     @classmethod

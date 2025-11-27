@@ -1,8 +1,11 @@
+from pathlib import Path
 from typing import List
 from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from vaccine_manager import auth, models, pydantic_models
@@ -21,6 +24,28 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve static files (frontend build)
+# Try multiple possible locations for static directory
+# Docker: /app/vaccine_manager/main.py -> /app/static (parent.parent)
+# Local dev: backend/vaccine_manager/main.py -> project_root/static (parent.parent.parent)
+# Also check frontend/public for local development
+_base_paths = [
+    Path(__file__).parent.parent / "static",  # Docker: /app/static
+    Path(__file__).parent.parent.parent / "static",  # Local: project_root/static
+    Path(__file__).parent.parent.parent.parent
+    / "frontend"
+    / "public",  # Local: frontend/public
+]
+static_dir = Path(__file__).parent.parent / "static"  # Default to Docker structure
+for path in _base_paths:
+    if path.exists():
+        static_dir = path
+        break
+
+if static_dir.exists():
+    # Mount static assets (JS, CSS, images, etc.)
+    app.mount("/assets", StaticFiles(directory=static_dir / "assets"), name="assets")
 
 
 # Authentication endpoints (public)
@@ -194,3 +219,24 @@ def get_vaccine_records(
         .filter_by(family_member_id=family_member_id)
         .all()
     )
+
+
+# Serve static files and index.html for all non-API routes (SPA routing) - MUST be last
+if static_dir.exists():
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Don't serve index.html for API routes or static assets
+        if full_path.startswith(("api/", "assets/", "docs", "openapi.json", "redoc")):
+            raise HTTPException(status_code=404)
+
+        # Check if the requested path is a static file
+        static_file_path = static_dir / full_path
+        if static_file_path.is_file() and static_file_path.exists():
+            return FileResponse(static_file_path)
+
+        # Otherwise serve index.html for SPA routing
+        index_path = static_dir / "index.html"
+        if index_path.exists():
+            return FileResponse(index_path)
+        raise HTTPException(status_code=404)
