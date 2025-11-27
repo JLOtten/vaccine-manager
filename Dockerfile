@@ -35,9 +35,6 @@ COPY backend/vaccine_manager/ ./vaccine_manager/
 # Install Python dependencies (requires package directory to be present)
 RUN uv sync --frozen
 
-# Install PostgreSQL driver (psycopg2-binary) for production database support
-RUN uv pip install psycopg2-binary
-
 # Copy rest of backend directory structure (in case there are other files needed)
 COPY backend/ ./backend/
 

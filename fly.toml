@@ -24,3 +24,8 @@ primary_region = "iad"
   cpus = 1
   memory_mb = 512
 
+# Persistent volume for SQLite database
+[[mounts]]
+  source = "vaccine_manager_data"
+  destination = "/data"
+

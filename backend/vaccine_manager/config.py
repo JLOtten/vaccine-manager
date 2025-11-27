@@ -24,7 +24,10 @@ class Settings(BaseSettings):
     secure_cookies: bool = True
 
     # Database Settings
-    # Defaults to SQLite for development, but can be overridden via DATABASE_URL env var
+    # SQLite database path
+    # Defaults to ./sql_app.db for local development
+    # On Fly.io, set DATABASE_URL="sqlite:////data/sql_app.db" to use persistent volume
+    # Can be overridden via DATABASE_URL env var
     database_url: str = "sqlite:///./sql_app.db"
 
     @field_validator("cors_origins", mode="before")
