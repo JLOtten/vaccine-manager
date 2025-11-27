@@ -19,7 +19,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 1440  # 1 day
 
     # CORS Settings
-    cors_origins: list[str]
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "https://vaccine-manager.fly.dev",
+    ]
 
     secure_cookies: bool = True
 
