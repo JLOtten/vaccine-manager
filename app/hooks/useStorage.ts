@@ -1,10 +1,14 @@
 /**
- * Custom hooks for accessing storage
+ * Custom hooks for accessing Automerge storage with React
+ * Uses @automerge/automerge-repo-react-hooks for automatic re-renders
  */
 
-import { useEffect, useState } from "react";
-import { storage } from "~/lib/storage";
+import { useState, useMemo, useEffect } from "react";
+import { useDocument } from "@automerge/automerge-repo-react-hooks";
+import type { DocumentId } from "@automerge/automerge-repo";
+import { storage, getOrCreateDocumentUrl } from "~/lib/storage";
 import type {
+  AppData,
   FamilyMember,
   FamilyMemberCreate,
   Vaccine,
@@ -13,36 +17,77 @@ import type {
 } from "~/lib/types";
 
 /**
- * Hook for managing family members
+ * Hook to get the document URL
+ * Initializes the document if it doesn't exist
+ * Returns null during SSR
  */
-export function useFamilyMembers() {
-  const [members, setMembers] = useState<FamilyMember[]>([]);
+function useDocumentUrl() {
+  const [documentUrl, setDocumentUrl] = useState<DocumentId | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadMembers = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await storage.getFamilyMembers();
-      setMembers(data);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load family members"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadMembers();
+    // Only run in browser
+    if (typeof window === "undefined") {
+      setLoading(false);
+      return;
+    }
+
+    getOrCreateDocumentUrl()
+      .then((url) => {
+        setDocumentUrl(url);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to initialize document");
+        setLoading(false);
+      });
   }, []);
 
+  return { documentUrl, loading, error };
+}
+
+/**
+ * Hook for managing family members
+ * Uses useDocument() for automatic re-renders on data changes
+ */
+export function useFamilyMembers() {
+  const { documentUrl, loading: urlLoading, error: urlError } = useDocumentUrl();
+  const [doc, changeDoc] = useDocument<AppData>(documentUrl!);
+  const [error, setError] = useState<string | null>(null);
+
+  // SSR fallback - if no document URL yet (SSR or loading), show loading state
+  const isSSR = typeof window === "undefined";
+  
+  // Combine loading states
+  const loading = isSSR || urlLoading || (!doc && !urlError);
+
+  // Get members from document
+  const members = useMemo(() => {
+    if (!doc) return [];
+    return [...doc.familyMembers]; // Create a shallow copy for React
+  }, [doc?.familyMembers]);
+
   const addMember = async (member: FamilyMemberCreate) => {
+    if (!doc) {
+      throw new Error("Document not ready");
+    }
+
     try {
-      const newMember = await storage.addFamilyMember(member);
-      setMembers((prev) => [...prev, newMember]);
+      const now = new Date().toISOString();
+      const newMember: FamilyMember = {
+        ...member,
+        id: crypto.randomUUID(),
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      changeDoc((d) => {
+        d.familyMembers.push(newMember);
+        d.lastModified = now;
+      });
+
+      setError(null);
       return newMember;
     } catch (err) {
       const message =
@@ -53,10 +98,27 @@ export function useFamilyMembers() {
   };
 
   const updateMember = async (id: string, updates: Partial<FamilyMemberCreate>) => {
+    if (!doc) {
+      throw new Error("Document not ready");
+    }
+
     try {
-      const updated = await storage.updateFamilyMember(id, updates);
-      setMembers((prev) => prev.map((m) => (m.id === id ? updated : m)));
-      return updated;
+      const index = doc.familyMembers.findIndex((m) => m.id === id);
+      if (index === -1) {
+        throw new Error(`Family member with id ${id} not found`);
+      }
+
+      const now = new Date().toISOString();
+
+      changeDoc((d) => {
+        const member = d.familyMembers[index];
+        Object.assign(member, updates);
+        member.updatedAt = now;
+        d.lastModified = now;
+      });
+
+      setError(null);
+      return doc.familyMembers[index];
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to update family member";
@@ -66,9 +128,27 @@ export function useFamilyMembers() {
   };
 
   const deleteMember = async (id: string) => {
+    if (!doc) {
+      throw new Error("Document not ready");
+    }
+
     try {
-      await storage.deleteFamilyMember(id);
-      setMembers((prev) => prev.filter((m) => m.id !== id));
+      changeDoc((d) => {
+        // Remove family member
+        const memberIndex = d.familyMembers.findIndex((m) => m.id === id);
+        if (memberIndex !== -1) {
+          d.familyMembers.splice(memberIndex, 1);
+        }
+
+        // Remove associated vaccine records
+        d.vaccineRecords = d.vaccineRecords.filter(
+          (r) => r.familyMemberId !== id
+        );
+
+        d.lastModified = new Date().toISOString();
+      });
+
+      setError(null);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to delete family member";
@@ -80,73 +160,86 @@ export function useFamilyMembers() {
   return {
     members,
     loading,
-    error,
+    error: error || urlError,
     addMember,
     updateMember,
     deleteMember,
-    refresh: loadMembers,
+    refresh: () => {}, // No-op: document updates automatically
   };
 }
 
 /**
  * Hook for managing vaccines
+ * Uses useDocument() for automatic re-renders on data changes
  */
 export function useVaccines() {
-  const [vaccines, setVaccines] = useState<Vaccine[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { documentUrl, loading: urlLoading, error: urlError } = useDocumentUrl();
+  const [doc] = useDocument<AppData>(documentUrl!);
 
-  const loadVaccines = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await storage.getVaccines();
-      setVaccines(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load vaccines");
-    } finally {
-      setLoading(false);
-    }
+  // SSR fallback
+  const isSSR = typeof window === "undefined";
+  
+  // Combine loading states
+  const loading = isSSR || urlLoading || (!doc && !urlError);
+
+  // Get vaccines from document
+  const vaccines = useMemo(() => {
+    if (!doc) return [];
+    return [...doc.vaccines]; // Create a shallow copy for React
+  }, [doc?.vaccines]);
+
+  return {
+    vaccines,
+    loading,
+    error: urlError,
+    refresh: () => {}, // No-op: document updates automatically
   };
-
-  useEffect(() => {
-    loadVaccines();
-  }, []);
-
-  return { vaccines, loading, error, refresh: loadVaccines };
 }
 
 /**
  * Hook for managing vaccine records
+ * Uses useDocument() for automatic re-renders on data changes
  */
 export function useVaccineRecords(familyMemberId?: string) {
-  const [records, setRecords] = useState<VaccineRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { documentUrl, loading: urlLoading, error: urlError } = useDocumentUrl();
+  const [doc, changeDoc] = useDocument<AppData>(documentUrl!);
   const [error, setError] = useState<string | null>(null);
 
-  const loadRecords = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await storage.getVaccineRecords(familyMemberId);
-      setRecords(data);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load vaccine records"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  // SSR fallback
+  const isSSR = typeof window === "undefined";
+  
+  // Combine loading states
+  const loading = isSSR || urlLoading || (!doc && !urlError);
 
-  useEffect(() => {
-    loadRecords();
-  }, [familyMemberId]);
+  // Get records from document (filtered if familyMemberId provided)
+  const records = useMemo(() => {
+    if (!doc) return [];
+    const allRecords = [...doc.vaccineRecords];
+    return familyMemberId
+      ? allRecords.filter((r) => r.familyMemberId === familyMemberId)
+      : allRecords;
+  }, [doc?.vaccineRecords, familyMemberId]);
 
   const addRecord = async (record: VaccineRecordCreate) => {
+    if (!doc) {
+      throw new Error("Document not ready");
+    }
+
     try {
-      const newRecord = await storage.addVaccineRecord(record);
-      setRecords((prev) => [...prev, newRecord]);
+      const now = new Date().toISOString();
+      const newRecord: VaccineRecord = {
+        ...record,
+        id: crypto.randomUUID(),
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      changeDoc((d) => {
+        d.vaccineRecords.push(newRecord);
+        d.lastModified = now;
+      });
+
+      setError(null);
       return newRecord;
     } catch (err) {
       const message =
@@ -160,10 +253,27 @@ export function useVaccineRecords(familyMemberId?: string) {
     id: string,
     updates: Partial<VaccineRecordCreate>
   ) => {
+    if (!doc) {
+      throw new Error("Document not ready");
+    }
+
     try {
-      const updated = await storage.updateVaccineRecord(id, updates);
-      setRecords((prev) => prev.map((r) => (r.id === id ? updated : r)));
-      return updated;
+      const index = doc.vaccineRecords.findIndex((r) => r.id === id);
+      if (index === -1) {
+        throw new Error(`Vaccine record with id ${id} not found`);
+      }
+
+      const now = new Date().toISOString();
+
+      changeDoc((d) => {
+        const record = d.vaccineRecords[index];
+        Object.assign(record, updates);
+        record.updatedAt = now;
+        d.lastModified = now;
+      });
+
+      setError(null);
+      return doc.vaccineRecords[index];
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to update vaccine record";
@@ -173,9 +283,20 @@ export function useVaccineRecords(familyMemberId?: string) {
   };
 
   const deleteRecord = async (id: string) => {
+    if (!doc) {
+      throw new Error("Document not ready");
+    }
+
     try {
-      await storage.deleteVaccineRecord(id);
-      setRecords((prev) => prev.filter((r) => r.id !== id));
+      changeDoc((d) => {
+        const index = d.vaccineRecords.findIndex((r) => r.id === id);
+        if (index !== -1) {
+          d.vaccineRecords.splice(index, 1);
+        }
+        d.lastModified = new Date().toISOString();
+      });
+
+      setError(null);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to delete vaccine record";
@@ -187,16 +308,17 @@ export function useVaccineRecords(familyMemberId?: string) {
   return {
     records,
     loading,
-    error,
+    error: error || urlError,
     addRecord,
     updateRecord,
     deleteRecord,
-    refresh: loadRecords,
+    refresh: () => {}, // No-op: document updates automatically
   };
 }
 
 /**
  * Hook for export/import functionality
+ * These operations still use the storage adapter
  */
 export function useExportImport() {
   const [exporting, setExporting] = useState(false);

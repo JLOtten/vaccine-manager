@@ -14,6 +14,9 @@ importers:
       '@automerge/automerge-repo':
         specifier: ^2.5.1
         version: 2.5.1
+      '@automerge/automerge-repo-react-hooks':
+        specifier: ^2.5.1
+        version: 2.5.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@automerge/automerge-repo-storage-indexeddb':
         specifier: ^2.5.1
         version: 2.5.1
@@ -83,6 +86,12 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.3.1(@types/node@22.19.7)(jiti@2.6.1)(lightningcss@1.30.2))
 
 packages:
+
+  '@automerge/automerge-repo-react-hooks@2.5.1':
+    resolution: {integrity: sha512-IthUQEjXsKk0btVvkuOt+YFzuVbcO+em2BLrHQv7sqO0inUnw3CqsAxQXaISCnpotV5Cz8Xy7AAYhPR5Qtw+KA==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
 
   '@automerge/automerge-repo-storage-indexeddb@2.5.1':
     resolution: {integrity: sha512-klyemjiwEn2+PW+NTjvBtjmykjJVoaBbQgk5P02jIgvAO7KH8OACldFzPrJdO0o6WAxkiOdtte8RHFKrDPkBlw==}
@@ -1509,6 +1518,11 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
 
+  react-usestateref@1.0.9:
+    resolution: {integrity: sha512-t8KLsI7oje0HzfzGhxFXzuwbf1z9vhBM1ptHLUIHhYqZDKFuI5tzdhEVxSNzUkYxwF8XdpOErzHlKxvP7sTERw==}
+    peerDependencies:
+      react: '>16.0.0'
+
   react@19.2.3:
     resolution: {integrity: sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==}
     engines: {node: '>=0.10.0'}
@@ -1742,6 +1756,17 @@ packages:
     resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
 
 snapshots:
+
+  '@automerge/automerge-repo-react-hooks@2.5.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      '@automerge/automerge': 3.2.2
+      '@automerge/automerge-repo': 2.5.1
+      eventemitter3: 5.0.4
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      react-usestateref: 1.0.9(react@19.2.3)
+    transitivePeerDependencies:
+      - supports-color
 
   '@automerge/automerge-repo-storage-indexeddb@2.5.1':
     dependencies:
@@ -3101,6 +3126,10 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
+
+  react-usestateref@1.0.9(react@19.2.3):
+    dependencies:
+      react: 19.2.3
 
   react@19.2.3: {}
 

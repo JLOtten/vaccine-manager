@@ -1,11 +1,14 @@
 /**
- * Automerge Repo implementation of the IStorage interface
+ * Automerge Repo implementation for storage operations
  * Uses Automerge Repo for proper document management, persistence, and sync
+ * 
+ * Components should use the React hooks (useDocument) for reading/writing data.
+ * This module focuses on export/import/clear operations and provides the repo instance.
  */
 
 import { Repo } from "@automerge/automerge-repo";
 import { IndexedDBStorageAdapter } from "@automerge/automerge-repo-storage-indexeddb";
-import type { DocHandle } from "@automerge/automerge-repo";
+import type { DocHandle, DocumentId } from "@automerge/automerge-repo";
 import * as Automerge from "@automerge/automerge";
 import type {
   AppData,
@@ -20,18 +23,113 @@ import type { IStorage } from "./interface";
 const STORAGE_VERSION = "1.0.0";
 const DOCUMENT_URL_KEY = "vaccine-manager-document-url";
 
+// Lazy-initialized Repo instance (browser-only)
+let repoInstance: Repo | null = null;
+
+/**
+ * Get or create the Repo instance (lazy initialization for browser-only)
+ */
+export function getRepo(): Repo {
+  if (typeof window === "undefined") {
+    throw new Error("Repo can only be initialized in browser context");
+  }
+  
+  if (!repoInstance) {
+    repoInstance = new Repo({
+      storage: new IndexedDBStorageAdapter(),
+      network: [], // No network sync for now
+    });
+  }
+  
+  return repoInstance;
+}
+
+// Export a getter for the repo (for backward compatibility)
+export const repo = typeof window !== "undefined" ? getRepo() : null as any;
+
+/**
+ * Get or initialize the document URL
+ * This function ensures a document exists and returns its URL for use with useDocument()
+ */
+export async function getOrCreateDocumentUrl(): Promise<DocumentId> {
+  if (typeof window === "undefined") {
+    throw new Error("Cannot access document in SSR context");
+  }
+
+  // Check if we have a stored document URL
+  const storedUrl = localStorage.getItem(DOCUMENT_URL_KEY);
+
+    const currentRepo = getRepo();
+
+    if (storedUrl) {
+      try {
+        // Try to load existing document
+        const handle = currentRepo.find<AppData>(storedUrl as DocumentId);
+        await handle.whenReady();
+        
+        // Verify the document loaded successfully
+        if (handle.docSync()) {
+          return storedUrl as DocumentId;
+        }
+      } catch (error) {
+        console.error("Failed to load existing document:", error);
+      }
+    }
+
+    // Create new document if none exists or loading failed
+    const handle = currentRepo.create<AppData>();
+    handle.change((doc) => {
+      Object.assign(doc, getDefaultData());
+    });
+
+    // Store the document URL for future sessions
+    localStorage.setItem(DOCUMENT_URL_KEY, handle.url);
+    await handle.whenReady();
+    
+    return handle.url;
+}
+
+/**
+ * Get default data structure for a new document
+ */
+function getDefaultData(): AppData {
+  return {
+    version: STORAGE_VERSION,
+    familyMembers: [],
+    vaccines: getDefaultVaccines(),
+    vaccineRecords: [],
+    lastModified: new Date().toISOString(),
+  };
+}
+
+/**
+ * Get default vaccines for a new document
+ */
+function getDefaultVaccines(): Vaccine[] {
+  return [
+    {
+      id: crypto.randomUUID(),
+      name: "COVID-19",
+      description: "COVID-19 vaccine (any manufacturer)",
+    },
+    {
+      id: crypto.randomUUID(),
+      name: "Seasonal Flu",
+      description: "Annual influenza vaccine",
+    },
+    {
+      id: crypto.randomUUID(),
+      name: "Tdap",
+      description: "Tetanus, diphtheria, and pertussis vaccine",
+    },
+  ];
+}
+
 export class AutomergeStorageAdapter implements IStorage {
-  private repo: Repo;
   private handle: DocHandle<AppData> | null = null;
   private initPromise: Promise<void>;
 
   constructor() {
-    // Initialize Repo with IndexedDB storage
-    this.repo = new Repo({
-      storage: new IndexedDBStorageAdapter(),
-      network: [], // No network sync for now
-    });
-
     // Initialize document handle
     this.initPromise = this.initializeDocument();
   }
@@ -41,13 +139,15 @@ export class AutomergeStorageAdapter implements IStorage {
       return; // SSR fallback
     }
 
+    const currentRepo = getRepo();
+
     // Check if we have a stored document URL
     const storedUrl = localStorage.getItem(DOCUMENT_URL_KEY);
 
     if (storedUrl) {
       try {
         // Try to load existing document
-        this.handle = this.repo.find<AppData>(storedUrl as any);
+        this.handle = currentRepo.find<AppData>(storedUrl as DocumentId);
         await this.handle.whenReady();
         
         // Verify the document loaded successfully
@@ -60,14 +160,22 @@ export class AutomergeStorageAdapter implements IStorage {
     }
 
     // Create new document if none exists or loading failed
-    this.handle = this.repo.create<AppData>();
+    this.handle = currentRepo.create<AppData>();
     this.handle.change((doc) => {
-      Object.assign(doc, this.getDefaultData());
+      Object.assign(doc, getDefaultData());
     });
 
     // Store the document URL for future sessions
     localStorage.setItem(DOCUMENT_URL_KEY, this.handle.url);
     await this.handle.whenReady();
+  }
+
+  /**
+   * Get the document URL for use with React hooks
+   */
+  async getDocumentUrl(): Promise<DocumentId | null> {
+    await this.ensureReady();
+    return this.handle?.url || null;
   }
 
   private async ensureReady(): Promise<void> {
@@ -89,37 +197,10 @@ export class AutomergeStorageAdapter implements IStorage {
     return doc;
   }
 
-  private getDefaultData(): AppData {
-    return {
-      version: STORAGE_VERSION,
-      familyMembers: [],
-      vaccines: this.getDefaultVaccines(),
-      vaccineRecords: [],
-      lastModified: new Date().toISOString(),
-    };
-  }
+  // NOTE: Read and write operations are now handled by useDocument() React hook.
+  // These legacy methods remain for backward compatibility but are deprecated.
+  // Components should use useDocument() directly instead.
 
-  private getDefaultVaccines(): Vaccine[] {
-    return [
-      {
-        id: crypto.randomUUID(),
-        name: "COVID-19",
-        description: "COVID-19 vaccine (any manufacturer)",
-      },
-      {
-        id: crypto.randomUUID(),
-        name: "Seasonal Flu",
-        description: "Annual influenza vaccine",
-      },
-      {
-        id: crypto.randomUUID(),
-        name: "Tdap",
-        description: "Tetanus, diphtheria, and pertussis vaccine",
-      },
-    ];
-  }
-
-  // Read operations
   async getData(): Promise<AppData> {
     await this.ensureReady();
     const doc = this.getDoc();
@@ -168,7 +249,6 @@ export class AutomergeStorageAdapter implements IStorage {
     return record ? JSON.parse(JSON.stringify(record)) : null;
   }
 
-  // Write operations - Family Members
   async addFamilyMember(member: FamilyMemberCreate): Promise<FamilyMember> {
     await this.ensureReady();
     
@@ -232,7 +312,6 @@ export class AutomergeStorageAdapter implements IStorage {
     });
   }
 
-  // Write operations - Vaccine Records
   async addVaccineRecord(record: VaccineRecordCreate): Promise<VaccineRecord> {
     await this.ensureReady();
     
@@ -299,7 +378,7 @@ export class AutomergeStorageAdapter implements IStorage {
 
     // Reset document to default data
     this.handle!.change((doc) => {
-      const defaultData = this.getDefaultData();
+      const defaultData = getDefaultData();
       doc.familyMembers = defaultData.familyMembers;
       doc.vaccines = defaultData.vaccines;
       doc.vaccineRecords = defaultData.vaccineRecords;
@@ -347,8 +426,10 @@ export class AutomergeStorageAdapter implements IStorage {
       // Note: We need to replace the entire handle with the merged document
       const oldUrl = this.handle!.url;
       
+      const currentRepo = getRepo();
+
       // Create new handle with merged document
-      const newHandle = this.repo.create<AppData>();
+      const newHandle = currentRepo.create<AppData>();
       newHandle.change((doc) => {
         Object.assign(doc, JSON.parse(JSON.stringify(mergedDoc)));
       });
