@@ -13,6 +13,7 @@ import { useExportImport } from "~/hooks/useStorage";
 export default function Settings() {
   const {
     exportData,
+    exportJSON,
     importData,
     clearData,
     exporting,
@@ -28,9 +29,20 @@ export default function Settings() {
       setLocalError(null);
       setLocalSuccess(null);
       await exportData();
-      setLocalSuccess("Data exported successfully!");
+      setLocalSuccess("CRDT data exported successfully!");
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : "Export failed");
+    }
+  };
+
+  const handleExportJSON = async () => {
+    try {
+      setLocalError(null);
+      setLocalSuccess(null);
+      await exportJSON();
+      setLocalSuccess("JSON exported successfully!");
+    } catch (err) {
+      setLocalError(err instanceof Error ? err.message : "JSON export failed");
     }
   };
 
@@ -86,18 +98,36 @@ export default function Settings() {
           Export Data
         </Typography>
         <Typography variant="body2" color="text.secondary" paragraph>
-          Download all your vaccine records as a JSON file. You can import this
-          file on another device or use it as a backup.
+          Download your vaccine records. Choose the format based on your needs:
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<DownloadIcon />}
-          onClick={handleExport}
-          disabled={exporting}
-        >
-          {exporting ? "Exporting..." : "Export Data"}
-        </Button>
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<DownloadIcon />}
+            onClick={handleExport}
+            disabled={exporting}
+          >
+            {exporting ? "Exporting..." : "Export CRDT (.crdt)"}
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<DownloadIcon />}
+            onClick={handleExportJSON}
+            disabled={exporting}
+          >
+            {exporting ? "Exporting..." : "Export JSON (.json)"}
+          </Button>
+        </Box>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          <strong>.crdt files:</strong> Importable format that merges with existing data.
+          Use this to sync records across devices or combine data from multiple sources.
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          <strong>.json files:</strong> Human-readable format for viewing or sharing.
+          Cannot be imported back into the app.
+        </Typography>
       </Paper>
 
       <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
@@ -105,12 +135,13 @@ export default function Settings() {
           Import Data
         </Typography>
         <Typography variant="body2" color="text.secondary" paragraph>
-          Import vaccine records from a previously exported JSON file. This will
-          replace all current data.
+          Import vaccine records from a .crdt file. Data will be merged with your existing
+          records - no data will be lost. You can import multiple files sequentially to
+          combine records from different sources.
         </Typography>
         <input
           type="file"
-          accept=".json"
+          accept=".crdt"
           ref={fileInputRef}
           onChange={handleImport}
           style={{ display: "none" }}
@@ -122,8 +153,12 @@ export default function Settings() {
           onClick={() => fileInputRef.current?.click()}
           disabled={importing}
         >
-          {importing ? "Importing..." : "Import Data"}
+          {importing ? "Importing..." : "Import CRDT File"}
         </Button>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          <strong>Note:</strong> Only .crdt files can be imported. JSON files are read-only
+          and cannot be imported.
+        </Typography>
       </Paper>
 
       <Divider sx={{ my: 4 }} />

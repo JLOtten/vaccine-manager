@@ -40,6 +40,11 @@ export interface IStorage {
 
   // Utility operations
   clear(): Promise<void>;
-  export(): Promise<string>;
-  import(jsonString: string): Promise<void>;
+  
+  // Primary export/import (CRDT binary - mergeable)
+  export(): Promise<Uint8Array>;
+  import(data: Uint8Array | ArrayBuffer): Promise<void>;
+  
+  // Secondary export (JSON - human-readable, NOT importable)
+  exportJSON(): Promise<string>;
 }

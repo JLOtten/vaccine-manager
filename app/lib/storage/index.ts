@@ -2,11 +2,11 @@
  * Storage exports - single source of truth for storage implementation
  */
 
-import { LocalStorageAdapter } from "./localStorage";
+import { AutomergeStorageAdapter } from "./automergeStorage";
 import type { IStorage } from "./interface";
 
-// Singleton instance - can be swapped for different implementations
-let storageInstance: IStorage = new LocalStorageAdapter();
+// Singleton instance - using CRDT storage for conflict-free merging
+let storageInstance: IStorage = new AutomergeStorageAdapter();
 
 export const storage = storageInstance;
 

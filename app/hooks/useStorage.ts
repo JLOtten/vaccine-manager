@@ -203,16 +203,17 @@ export function useExportImport() {
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Primary export: CRDT binary format (.crdt) - importable and mergeable
   const exportData = async () => {
     try {
       setExporting(true);
       setError(null);
-      const jsonString = await storage.export();
-      const blob = new Blob([jsonString], { type: "application/json" });
+      const binary = await storage.export();
+      const blob = new Blob([binary], { type: "application/octet-stream" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `vaccine-records-${new Date().toISOString().split("T")[0]}.json`;
+      a.download = `vaccine-records-${new Date().toISOString().split("T")[0]}.crdt`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
@@ -225,13 +226,40 @@ export function useExportImport() {
     }
   };
 
+  // Secondary export: JSON format (.json) - human-readable, NOT importable
+  const exportJSON = async () => {
+    try {
+      setExporting(true);
+      setError(null);
+      const jsonString = await storage.exportJSON();
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `vaccine-records-${new Date().toISOString().split("T")[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to export JSON";
+      setError(message);
+      throw new Error(message);
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  // Import CRDT data (merges with existing data)
   const importData = async (file: File) => {
     try {
       setImporting(true);
       setError(null);
-      const jsonString = await file.text();
-      await storage.import(jsonString);
-      // Refresh the page to load new data
+      
+      // Read file as ArrayBuffer for binary data
+      const arrayBuffer = await file.arrayBuffer();
+      await storage.import(arrayBuffer);
+      
+      // Refresh the page to load merged data
       window.location.reload();
     } catch (err) {
       const message =
@@ -258,6 +286,7 @@ export function useExportImport() {
 
   return {
     exportData,
+    exportJSON,
     importData,
     clearData,
     exporting,
