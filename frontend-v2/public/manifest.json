@@ -1,0 +1,19 @@
+{
+  "name": "Vaccine Manager",
+  "short_name": "VaxManager",
+  "description": "Track vaccination records for you and your family",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0f274a",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["health", "medical", "productivity"],
+  "screenshots": []
+}
