@@ -54,10 +54,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <RepoProvider>
+    <>
       <ResponsiveAppBar />
-      <Outlet />
-    </RepoProvider>
+      <RepoProvider>
+        <Outlet />
+      </RepoProvider>
+    </>
   );
 }
 
