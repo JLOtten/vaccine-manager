@@ -2,103 +2,68 @@
 
 ## Overview
 
-The Vaccine Manager is a personal/family vaccination record application with:
+The Vaccine Manager is a local-first vaccination record application:
 
-- **Backend**: Python FastAPI application (runs on port 9090)
-- **Frontend**: React TypeScript application (runs on port 3000)
-- **Database**: SQLite (stored in `backend/sql_app.db`)
+- **Framework**: React Router v7 with TypeScript
+- **Storage**: Browser LocalStorage (no backend required)
+- **Build Tool**: Vite
+- **UI**: Material-UI (MUI)
 
 ## Prerequisites
 
-- Python 3.12+, `uv` package manager
-- Node.js, npm, `pnpm` package manager
+- Node.js 18+
+- pnpm package manager
 
 ## Running the Application
 
-### Backend
-
 ```bash
-cd backend
-uv sync
-source .venv/bin/activate
-make run
-# API available at http://localhost:9090
-```
-
-### Frontend
-
-```bash
-cd frontend
+# Install dependencies
 pnpm install
-pnpm start
+
+# Run development server
+pnpm run dev
 # Application available at http://localhost:3000
 ```
 
-### Both Services
-
+**Note**: If you encounter "too many open files" error on macOS:
 ```bash
-make run
-# Starts both backend (port 9090) and frontend (port 3000) servers
+ulimit -n 10240 && pnpm run dev
 ```
 
-## Pre-Commit Checklist
+## Available Commands
 
-**IMPORTANT**: Before committing code, ensure the following:
-
-1. **Format all code**:
-
-   ```bash
-   make format
-   # Or format individually:
-   # make format-backend
-   # make format-frontend
-   ```
-
-2. **Run all tests**:
-
-   ```bash
-   make test
-   # Or test individually:
-   # make test-backend
-   # make test-frontend
-   ```
-
-3. **Run linting** (optional but recommended):
-   ```bash
-   make lint
-   # Or lint individually:
-   # make lint-backend
-   # make lint-frontend
-   ```
-
-The `make ci` target runs both linting and tests, which is useful for CI/CD pipelines.
+```bash
+pnpm run dev        # Start development server
+pnpm run build      # Build for production
+pnpm run typecheck  # Check TypeScript types
+pnpm start          # Preview production build
+```
 
 ## Code Structure
 
-### Backend (`backend/`)
-
 ```
-backend/
-├── vaccine_manager/
-│   ├── main.py              # FastAPI routes
-│   ├── models.py            # SQLAlchemy models
-│   ├── pydantic_models.py   # Request/response schemas
-│   ├── db.py                # Database setup
-│   └── test_main.py         # Tests
-├── pyproject.toml
-└── Makefile
-```
-
-### Frontend (`frontend/`)
-
-```
-frontend/
-├── src/
-│   ├── components/          # React components
-│   ├── App.tsx              # Main app with routing
-│   └── index.tsx            # Entry point
-├── package.json
-└── tsconfig.json
+app/
+├── components/              # UI components
+│   ├── ResponsiveAppBar.tsx
+│   ├── Home.tsx
+│   ├── FamilyMemberLog.tsx
+│   ├── AddVaccine.tsx
+│   ├── ViewRecord.tsx
+│   ├── Settings.tsx
+│   ├── About.tsx
+│   └── Contact.tsx
+├── hooks/
+│   └── useStorage.ts        # Custom hooks for data access
+├── lib/
+│   ├── types.ts             # TypeScript types
+│   ├── schemas.ts           # Zod validation schemas
+│   └── storage/             # Pluggable storage layer
+│       ├── interface.ts     # IStorage interface
+│       ├── localStorage.ts  # LocalStorage implementation
+│       └── index.ts         # Storage singleton
+├── routes/                  # File-based routes
+└── root.tsx                 # Root layout with navigation
+public/                      # Static assets
 ```
 
 ## Attribution Requirements

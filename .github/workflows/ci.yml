@@ -15,15 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Setup backend
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          version: "latest"
-      - name: Install backend dependencies
-        run: cd backend && uv sync
-
-      # Setup frontend
+      # Setup pnpm and Node.js
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -33,10 +25,16 @@ jobs:
         with:
           node-version: 22
           cache: "pnpm"
-          cache-dependency-path: "./frontend/pnpm-lock.yaml"
-      - name: Install frontend dependencies
-        run: cd frontend && pnpm install --frozen-lockfile
+          cache-dependency-path: "./pnpm-lock.yaml"
 
-      # Run CI (linting + tests for both backend and frontend)
-      - name: Run CI
-        run: make ci
+      # Install dependencies
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Type check
+      - name: Type check
+        run: pnpm run typecheck
+
+      # Build
+      - name: Build
+        run: pnpm run build

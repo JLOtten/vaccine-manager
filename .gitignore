@@ -1,3 +1,7 @@
-*.db
+.DS_Store
+.env
+/node_modules/
 
-static
+# React Router
+/.react-router/
+/build/
