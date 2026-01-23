@@ -6,6 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useMemo } from "react";
 
 import type { Route } from "./+types/root";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
@@ -79,11 +83,30 @@ export function HydrateFallback() {
 export default function App() {
   // RepoContext is provided at the entry.client.tsx level
   // following the Automerge documentation pattern
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? "dark" : "light",
+          primary: {
+            main: "#0f274a",
+          },
+          secondary: {
+            main: "#667eea",
+          },
+        },
+      }),
+    [prefersDarkMode]
+  );
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <ResponsiveAppBar />
       <Outlet />
-    </>
+    </ThemeProvider>
   );
 }
 

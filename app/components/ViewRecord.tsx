@@ -39,7 +39,7 @@ export default function ViewRecord() {
   const loading = membersLoading || vaccinesLoading || recordsLoading;
 
   return (
-    <Box sx={{ maxWidth: 1200, margin: "20px auto", padding: "0 20px" }}>
+    <Box sx={{ maxWidth: 1200, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}>
       <Typography
         variant="h4"
         component="h1"
@@ -85,13 +85,13 @@ export default function ViewRecord() {
               No vaccine records found for {selectedFamilyMember?.name}.
             </Alert>
           ) : (
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
               <Box sx={{ p: 2 }}>
                 <Typography variant="h6" component="h2">
                   Vaccine Records for {selectedFamilyMember?.name}
                 </Typography>
               </Box>
-              <Table sx={{ minWidth: 650 }} aria-label="vaccine records table">
+              <Table sx={{ width: "100%" }} aria-label="vaccine records table">
                 <TableHead>
                   <TableRow>
                     <TableCell>Vaccine</TableCell>
