@@ -25,13 +25,13 @@ function BasicTable({
   onDelete: (id: string) => void;
 }) {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
       <Box sx={{ p: 2 }}>
         <Typography variant="h6" component="h2">
           Currently Tracked Members
         </Typography>
       </Box>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table sx={{ width: "100%" }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -125,7 +125,7 @@ function MyForm({ onMemberAdded }: { onMemberAdded: () => void }) {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}
+      sx={{ maxWidth: 600, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}
     >
       <Typography variant="h5" component="h2" gutterBottom>
         Enter New Family Member

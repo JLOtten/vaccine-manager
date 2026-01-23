@@ -91,7 +91,7 @@ export default function AddVaccine() {
 
   if (members.length === 0) {
     return (
-      <Box sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
+      <Box sx={{ maxWidth: 600, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Add Vaccine
         </Typography>
@@ -113,7 +113,7 @@ export default function AddVaccine() {
 
   if (vaccines.length === 0) {
     return (
-      <Box sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
+      <Box sx={{ maxWidth: 600, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Add Vaccine
         </Typography>
@@ -125,7 +125,7 @@ export default function AddVaccine() {
   }
 
   return (
-    <Box sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
+    <Box sx={{ maxWidth: 600, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Add Vaccine Record
       </Typography>
