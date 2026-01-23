@@ -62,7 +62,7 @@ export default function Settings() {
   const handleClear = async () => {
     if (
       confirm(
-        "Are you sure you want to delete ALL data? This cannot be undone. Make sure you've exported your data first!"
+        "Are you sure you want to delete ALL data? This cannot be undone. Make sure you've exported your data first!",
       )
     ) {
       try {
@@ -121,12 +121,13 @@ export default function Settings() {
           </Button>
         </Box>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          <strong>.crdt files:</strong> Importable format that merges with existing data.
-          Use this to sync records across devices or combine data from multiple sources.
+          <strong>.crdt files:</strong> Importable format that merges with
+          existing data. Use this to sync records across devices or combine data
+          from multiple sources.
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          <strong>.json files:</strong> Human-readable format for viewing or sharing.
-          Cannot be imported back into the app.
+          <strong>.json files:</strong> Human-readable format for viewing or
+          sharing. Cannot be imported back into the app.
         </Typography>
       </Paper>
 
@@ -135,9 +136,9 @@ export default function Settings() {
           Import Data
         </Typography>
         <Typography variant="body2" color="text.secondary" paragraph>
-          Import vaccine records from a .crdt file. Data will be merged with your existing
-          records - no data will be lost. You can import multiple files sequentially to
-          combine records from different sources.
+          Import vaccine records from a .crdt file. Data will be merged with
+          your existing records - no data will be lost. You can import multiple
+          files sequentially to combine records from different sources.
         </Typography>
         <input
           type="file"
@@ -156,8 +157,8 @@ export default function Settings() {
           {importing ? "Importing..." : "Import CRDT File"}
         </Button>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          <strong>Note:</strong> Only .crdt files can be imported. JSON files are read-only
-          and cannot be imported.
+          <strong>Note:</strong> Only .crdt files can be imported. JSON files
+          are read-only and cannot be imported.
         </Typography>
       </Paper>
 
@@ -183,8 +184,8 @@ export default function Settings() {
 
       <Box sx={{ mt: 4 }}>
         <Typography variant="body2" color="text.secondary">
-          <strong>Note:</strong> All data is stored locally in your browser.
-          No information is sent to any server. Export your data regularly to
+          <strong>Note:</strong> All data is stored locally in your browser. No
+          information is sent to any server. Export your data regularly to
           prevent loss.
         </Typography>
       </Box>

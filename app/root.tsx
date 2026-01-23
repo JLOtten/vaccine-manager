@@ -36,7 +36,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Track vaccination records for you and your family - local-first, privacy-focused" />
+        <meta
+          name="description"
+          content="Track vaccination records for you and your family - local-first, privacy-focused"
+        />
         <meta name="theme-color" content="#0f274a" />
         <link rel="manifest" href="/manifest.json" />
         <Meta />

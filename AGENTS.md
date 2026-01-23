@@ -26,6 +26,7 @@ pnpm run dev
 ```
 
 **Note**: If you encounter "too many open files" error on macOS:
+
 ```bash
 ulimit -n 10240 && pnpm run dev
 ```

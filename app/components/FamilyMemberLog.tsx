@@ -57,7 +57,7 @@ function BasicTable({
                     onClick={() => {
                       if (
                         confirm(
-                          `Are you sure you want to delete ${member.name}? This will also delete all their vaccine records.`
+                          `Are you sure you want to delete ${member.name}? This will also delete all their vaccine records.`,
                         )
                       ) {
                         onDelete(member.id);
@@ -108,7 +108,7 @@ function MyForm({ onMemberAdded }: { onMemberAdded: () => void }) {
       onMemberAdded();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to add family member"
+        err instanceof Error ? err.message : "Failed to add family member",
       );
     } finally {
       setLoading(false);

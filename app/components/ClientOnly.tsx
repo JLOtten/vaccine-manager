@@ -5,7 +5,13 @@
 
 import { useState, useEffect, type ReactNode } from "react";
 
-export function ClientOnly({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
+export function ClientOnly({
+  children,
+  fallback = null,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+}) {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {

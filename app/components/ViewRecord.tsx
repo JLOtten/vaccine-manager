@@ -9,15 +9,21 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
-import { useFamilyMembers, useVaccines, useVaccineRecords } from "~/hooks/useStorage";
+import {
+  useFamilyMembers,
+  useVaccines,
+  useVaccineRecords,
+} from "~/hooks/useStorage";
 
 export default function ViewRecord() {
   const { members, loading: membersLoading } = useFamilyMembers();
   const { vaccines, loading: vaccinesLoading } = useVaccines();
   const [selectedFamilyMemberId, setSelectedFamilyMemberId] = useState("");
-  const { records, loading: recordsLoading, error } = useVaccineRecords(
-    selectedFamilyMemberId || undefined
-  );
+  const {
+    records,
+    loading: recordsLoading,
+    error,
+  } = useVaccineRecords(selectedFamilyMemberId || undefined);
 
   const getVaccineName = (vaccineId: string): string => {
     const vaccine = vaccines.find((v) => v.id === vaccineId);
@@ -25,7 +31,7 @@ export default function ViewRecord() {
   };
 
   const selectedFamilyMember = members.find(
-    (m) => m.id === selectedFamilyMemberId
+    (m) => m.id === selectedFamilyMemberId,
   );
 
   const loading = membersLoading || vaccinesLoading || recordsLoading;

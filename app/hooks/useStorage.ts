@@ -39,7 +39,9 @@ function useDocumentUrl() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : "Failed to initialize document");
+        setError(
+          err instanceof Error ? err.message : "Failed to initialize document",
+        );
         setLoading(false);
       });
   }, []);
@@ -52,13 +54,17 @@ function useDocumentUrl() {
  * Uses useDocument() for automatic re-renders on data changes
  */
 export function useFamilyMembers() {
-  const { documentUrl, loading: urlLoading, error: urlError } = useDocumentUrl();
+  const {
+    documentUrl,
+    loading: urlLoading,
+    error: urlError,
+  } = useDocumentUrl();
   const [doc, changeDoc] = useDocument<AppData>(documentUrl!);
   const [error, setError] = useState<string | null>(null);
 
   // SSR fallback - if no document URL yet (SSR or loading), show loading state
   const isSSR = typeof window === "undefined";
-  
+
   // Combine loading states
   const loading = isSSR || urlLoading || (!doc && !urlError);
 
@@ -97,7 +103,10 @@ export function useFamilyMembers() {
     }
   };
 
-  const updateMember = async (id: string, updates: Partial<FamilyMemberCreate>) => {
+  const updateMember = async (
+    id: string,
+    updates: Partial<FamilyMemberCreate>,
+  ) => {
     if (!doc) {
       throw new Error("Document not ready");
     }
@@ -142,7 +151,7 @@ export function useFamilyMembers() {
 
         // Remove associated vaccine records
         d.vaccineRecords = d.vaccineRecords.filter(
-          (r) => r.familyMemberId !== id
+          (r) => r.familyMemberId !== id,
         );
 
         d.lastModified = new Date().toISOString();
@@ -173,12 +182,16 @@ export function useFamilyMembers() {
  * Uses useDocument() for automatic re-renders on data changes
  */
 export function useVaccines() {
-  const { documentUrl, loading: urlLoading, error: urlError } = useDocumentUrl();
+  const {
+    documentUrl,
+    loading: urlLoading,
+    error: urlError,
+  } = useDocumentUrl();
   const [doc] = useDocument<AppData>(documentUrl!);
 
   // SSR fallback
   const isSSR = typeof window === "undefined";
-  
+
   // Combine loading states
   const loading = isSSR || urlLoading || (!doc && !urlError);
 
@@ -201,13 +214,17 @@ export function useVaccines() {
  * Uses useDocument() for automatic re-renders on data changes
  */
 export function useVaccineRecords(familyMemberId?: string) {
-  const { documentUrl, loading: urlLoading, error: urlError } = useDocumentUrl();
+  const {
+    documentUrl,
+    loading: urlLoading,
+    error: urlError,
+  } = useDocumentUrl();
   const [doc, changeDoc] = useDocument<AppData>(documentUrl!);
   const [error, setError] = useState<string | null>(null);
 
   // SSR fallback
   const isSSR = typeof window === "undefined";
-  
+
   // Combine loading states
   const loading = isSSR || urlLoading || (!doc && !urlError);
 
@@ -251,7 +268,7 @@ export function useVaccineRecords(familyMemberId?: string) {
 
   const updateRecord = async (
     id: string,
-    updates: Partial<VaccineRecordCreate>
+    updates: Partial<VaccineRecordCreate>,
   ) => {
     if (!doc) {
       throw new Error("Document not ready");
@@ -376,11 +393,11 @@ export function useExportImport() {
     try {
       setImporting(true);
       setError(null);
-      
+
       // Read file as ArrayBuffer for binary data
       const arrayBuffer = await file.arrayBuffer();
       await storage.import(arrayBuffer);
-      
+
       // Refresh the page to load merged data
       window.location.reload();
     } catch (err) {
@@ -400,7 +417,8 @@ export function useExportImport() {
       // Refresh the page to load empty state
       window.location.reload();
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to clear data";
+      const message =
+        err instanceof Error ? err.message : "Failed to clear data";
       setError(message);
       throw new Error(message);
     }
