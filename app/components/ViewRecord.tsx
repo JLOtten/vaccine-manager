@@ -78,7 +78,13 @@ export default function ViewRecord() {
   };
 
   return (
-    <Box sx={{ maxWidth: 1200, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}>
+    <Box
+      sx={{
+        maxWidth: 1200,
+        margin: "20px auto",
+        padding: { xs: "0 16px", sm: "0 20px" },
+      }}
+    >
       <Typography
         variant="h4"
         component="h1"
@@ -155,7 +161,9 @@ export default function ViewRecord() {
                       <TableCell>
                         <IconButton
                           color="error"
-                          onClick={() => handleDeleteClick(record.id, record.vaccineId)}
+                          onClick={() =>
+                            handleDeleteClick(record.id, record.vaccineId)
+                          }
                           aria-label="delete record"
                           size="small"
                         >
@@ -178,19 +186,26 @@ export default function ViewRecord() {
         aria-labelledby="delete-dialog-title"
         aria-describedby="delete-dialog-description"
       >
-        <DialogTitle id="delete-dialog-title">Delete Vaccine Record</DialogTitle>
+        <DialogTitle id="delete-dialog-title">
+          Delete Vaccine Record
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-description">
             Are you sure you want to delete the vaccine record for{" "}
             <strong>{recordToDelete?.vaccineName}</strong>? This record will be
-            kept in history but will no longer appear in the active records list.
+            kept in history but will no longer appear in the active records
+            list.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+          <Button
+            onClick={handleDeleteConfirm}
+            color="error"
+            variant="contained"
+          >
             Delete
           </Button>
         </DialogActions>

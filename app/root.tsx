@@ -49,14 +49,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://vaccinemanager.org" />
         <meta property="og:title" content="Vaccine Manager" />
-        <meta property="og:description" content="Track vaccination records for you and your family - local-first, privacy-focused" />
-        <meta property="og:image" content="https://vaccinemanager.org/favicon.svg" />
+        <meta
+          property="og:description"
+          content="Track vaccination records for you and your family - local-first, privacy-focused"
+        />
+        <meta
+          property="og:image"
+          content="https://vaccinemanager.org/favicon.svg"
+        />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Vaccine Manager" />
-        <meta name="twitter:description" content="Track vaccination records for you and your family - local-first, privacy-focused" />
-        <meta name="twitter:image" content="https://vaccinemanager.org/favicon.svg" />
+        <meta
+          name="twitter:description"
+          content="Track vaccination records for you and your family - local-first, privacy-focused"
+        />
+        <meta
+          name="twitter:image"
+          content="https://vaccinemanager.org/favicon.svg"
+        />
 
         <link rel="manifest" href="/manifest.json" />
         <Meta />
@@ -129,7 +141,7 @@ export default function App() {
           },
         },
       }),
-    [prefersDarkMode]
+    [prefersDarkMode],
   );
 
   return (
