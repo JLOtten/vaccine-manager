@@ -79,7 +79,13 @@ export default function Settings() {
   const displaySuccess = localSuccess;
 
   return (
-    <Box sx={{ maxWidth: 800, margin: "40px auto", padding: { xs: "0 16px", sm: "0 20px" } }}>
+    <Box
+      sx={{
+        maxWidth: 800,
+        margin: "40px auto",
+        padding: { xs: "0 16px", sm: "0 20px" },
+      }}
+    >
       <Typography variant="h3" component="h1" gutterBottom>
         Settings
       </Typography>
@@ -171,9 +177,9 @@ export default function Settings() {
         sx={{
           p: 3,
           backgroundColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(211, 47, 47, 0.1)'
-              : '#fff3e0'
+            theme.palette.mode === "dark"
+              ? "rgba(211, 47, 47, 0.1)"
+              : "#fff3e0",
         }}
       >
         <Typography variant="h6" gutterBottom color="error">

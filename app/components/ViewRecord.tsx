@@ -39,7 +39,13 @@ export default function ViewRecord() {
   const loading = membersLoading || vaccinesLoading || recordsLoading;
 
   return (
-    <Box sx={{ maxWidth: 1200, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}>
+    <Box
+      sx={{
+        maxWidth: 1200,
+        margin: "20px auto",
+        padding: { xs: "0 16px", sm: "0 20px" },
+      }}
+    >
       <Typography
         variant="h4"
         component="h1"

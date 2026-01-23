@@ -35,6 +35,14 @@ jobs:
       - name: Type check
         run: pnpm run typecheck
 
+      # Format check
+      - name: Check formatting
+        run: pnpm run format:check
+
+      # Run tests
+      - name: Run tests
+        run: pnpm run test:run
+
       # Build
       - name: Build
         run: pnpm run build

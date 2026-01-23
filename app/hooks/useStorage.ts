@@ -348,7 +348,9 @@ export function useExportImport() {
       setExporting(true);
       setError(null);
       const binary = await storage.export();
-      const blob = new Blob([binary as BlobPart], { type: "application/octet-stream" });
+      const blob = new Blob([binary as BlobPart], {
+        type: "application/octet-stream",
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;

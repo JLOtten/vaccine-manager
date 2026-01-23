@@ -12,7 +12,8 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "format": "prettier --write \"**/*.{ts,tsx,json,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\""
   },
   "dependencies": {
     "@automerge/automerge": "^3.2.2",

@@ -125,7 +125,11 @@ function MyForm({ onMemberAdded }: { onMemberAdded: () => void }) {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      sx={{ maxWidth: 600, margin: "20px auto", padding: { xs: "0 16px", sm: "0 20px" } }}
+      sx={{
+        maxWidth: 600,
+        margin: "20px auto",
+        padding: { xs: "0 16px", sm: "0 20px" },
+      }}
     >
       <Typography variant="h5" component="h2" gutterBottom>
         Enter New Family Member

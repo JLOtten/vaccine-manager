@@ -25,6 +25,6 @@ startTransition(() => {
       <RepoContext.Provider value={repo}>
         <HydratedRouter />
       </RepoContext.Provider>
-    </StrictMode>
+    </StrictMode>,
   );
 });
