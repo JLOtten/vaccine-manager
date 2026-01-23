@@ -37,7 +37,7 @@ jobs:
 
       # Format check
       - name: Check formatting
-        run: pnpm run format -- --check
+        run: pnpm run format:check
 
       # Run tests
       - name: Run tests
