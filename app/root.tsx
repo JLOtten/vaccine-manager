@@ -9,8 +9,9 @@ import {
 
 import type { Route } from "./+types/root";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
-import { RepoProvider } from "./contexts/RepoProvider";
 import "./app.css";
+// Import home page CSS to ensure it's included in the bundle
+import "./components/Home.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
@@ -64,12 +65,12 @@ export function HydrateFallback() {
 }
 
 export default function App() {
+  // RepoContext is provided at the entry.client.tsx level
+  // following the Automerge documentation pattern
   return (
     <>
       <ResponsiveAppBar />
-      <RepoProvider>
-        <Outlet />
-      </RepoProvider>
+      <Outlet />
     </>
   );
 }

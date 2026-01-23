@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import ArticleIcon from "@mui/icons-material/Article";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import "./Home.css";
+// CSS is imported via the route's links function for proper loading
 
 export default function Home() {
   return (
