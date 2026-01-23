@@ -152,8 +152,7 @@ export function useFamilyMembers() {
 
         // Soft-delete associated vaccine records
         d.vaccineRecords.forEach((record) => {
-          if (record.familyMemberId === id && !record.isDeleted) {
-            record.isDeleted = true;
+          if (record.familyMemberId === id && !record.deletedAt) {
             record.deletedAt = now;
             record.updatedAt = now;
           }
@@ -236,7 +235,7 @@ export function useVaccineRecords(familyMemberId?: string) {
   // Get records from document (filtered if familyMemberId provided, excluding deleted records)
   const records = useMemo(() => {
     if (!doc) return [];
-    const allRecords = [...doc.vaccineRecords].filter((r) => !r.isDeleted);
+    const allRecords = [...doc.vaccineRecords].filter((r) => !r.deletedAt);
     return familyMemberId
       ? allRecords.filter((r) => r.familyMemberId === familyMemberId)
       : allRecords;
@@ -314,7 +313,6 @@ export function useVaccineRecords(familyMemberId?: string) {
       changeDoc((d) => {
         const index = d.vaccineRecords.findIndex((r) => r.id === id);
         if (index !== -1) {
-          d.vaccineRecords[index].isDeleted = true;
           d.vaccineRecords[index].deletedAt = now;
           d.vaccineRecords[index].updatedAt = now;
         }
