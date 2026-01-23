@@ -29,6 +29,8 @@ export const VaccineRecordSchema = z.object({
   notes: z.string().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
+  isDeleted: z.boolean().optional(),
+  deletedAt: z.string().datetime().optional(),
 });
 
 export const AppDataSchema = z.object({
