@@ -3,7 +3,7 @@
  * This enables automatic re-renders when the Automerge document changes
  */
 
-import { RepoContext } from "@automerge/automerge-repo-react-hooks";
+import { RepoContext } from "@automerge/react";
 import type { ReactNode } from "react";
 import { getRepo } from "~/lib/storage";
 

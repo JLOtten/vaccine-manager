@@ -29,8 +29,8 @@ const createMockHandle = () => {
 
 let mockHandle = createMockHandle();
 
-// Mock Automerge Repo
-vi.mock("@automerge/automerge-repo", () => {
+// Mock @automerge/react (which exports Repo and adapters)
+vi.mock("@automerge/react", () => {
   return {
     Repo: class MockRepo {
       create() {
@@ -41,12 +41,10 @@ vi.mock("@automerge/automerge-repo", () => {
         return mockHandle;
       }
     },
+    IndexedDBStorageAdapter: class MockIndexedDBStorageAdapter {},
+    BroadcastChannelNetworkAdapter: class MockBroadcastChannelNetworkAdapter {},
   };
 });
-
-vi.mock("@automerge/automerge-repo-storage-indexeddb", () => ({
-  IndexedDBStorageAdapter: class MockIndexedDBStorageAdapter {},
-}));
 
 vi.mock("@automerge/automerge", () => ({
   save: vi.fn((doc: any) => new Uint8Array([1, 2, 3])),

@@ -4,7 +4,7 @@
  */
 
 import { useState, useMemo, useEffect } from "react";
-import { useDocument } from "@automerge/automerge-repo-react-hooks";
+import { useDocument } from "@automerge/react";
 import type { DocumentId } from "@automerge/automerge-repo";
 import { storage, getOrCreateDocumentUrl } from "~/lib/storage";
 import type {

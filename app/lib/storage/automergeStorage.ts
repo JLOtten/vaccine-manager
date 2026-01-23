@@ -6,8 +6,11 @@
  * This module focuses on export/import/clear operations and provides the repo instance.
  */
 
-import { Repo } from "@automerge/automerge-repo";
-import { IndexedDBStorageAdapter } from "@automerge/automerge-repo-storage-indexeddb";
+import {
+  Repo,
+  BroadcastChannelNetworkAdapter,
+  IndexedDBStorageAdapter,
+} from "@automerge/react";
 import type { DocHandle, DocumentId } from "@automerge/automerge-repo";
 import * as Automerge from "@automerge/automerge";
 import type {
@@ -28,6 +31,7 @@ let repoInstance: Repo | null = null;
 
 /**
  * Get or create the Repo instance (lazy initialization for browser-only)
+ * Now includes BroadcastChannel for cross-tab sync
  */
 export function getRepo(): Repo {
   if (typeof window === "undefined") {
@@ -37,7 +41,7 @@ export function getRepo(): Repo {
   if (!repoInstance) {
     repoInstance = new Repo({
       storage: new IndexedDBStorageAdapter(),
-      network: [], // No network sync for now
+      network: [new BroadcastChannelNetworkAdapter()], // Enables cross-tab sync
     });
   }
 

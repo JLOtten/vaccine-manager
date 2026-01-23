@@ -14,12 +14,9 @@ importers:
       '@automerge/automerge-repo':
         specifier: ^2.5.1
         version: 2.5.1
-      '@automerge/automerge-repo-react-hooks':
+      '@automerge/react':
         specifier: ^2.5.1
         version: 2.5.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@automerge/automerge-repo-storage-indexeddb':
-        specifier: ^2.5.1
-        version: 2.5.1
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.9)(react@19.2.3)
@@ -38,11 +35,8 @@ importers:
       '@react-router/serve':
         specifier: 7.12.0
         version: 7.12.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
-      date-fns:
-        specifier: ^4.1.0
-        version: 4.1.0
       isbot:
-        specifier: ^5.1.31
+        specifier: ^5
         version: 5.1.33
       react:
         specifier: ^19.2.3
@@ -117,6 +111,15 @@ packages:
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
 
+  '@automerge/automerge-repo-network-broadcastchannel@2.5.1':
+    resolution: {integrity: sha512-htjVAPOzWvaal7jXkXhMBWW1OLHBAmGJp3fujdxgMmHa6/KUmhmHsn7VGvVqrU3vCfbfdu5PAupcla95AwlEbA==}
+
+  '@automerge/automerge-repo-network-messagechannel@2.5.1':
+    resolution: {integrity: sha512-C2GKMoiGlyp7KQCwMt1Az/tJMYa+UtlrLtZ6WHT+PN3RQ9D/c/f5CkSNQSHgJRwFW/c2sU6PI3zcRasgrYaUOA==}
+
+  '@automerge/automerge-repo-network-websocket@2.5.1':
+    resolution: {integrity: sha512-urvhlmTZ6VoJi5o0T2mtkVd4X1cuUdBC5/C/UY5FFgWczEq7PwCdNhUndv1CQSn8ePPsT59z7ZnRzZJbqqu22Q==}
+
   '@automerge/automerge-repo-react-hooks@2.5.1':
     resolution: {integrity: sha512-IthUQEjXsKk0btVvkuOt+YFzuVbcO+em2BLrHQv7sqO0inUnw3CqsAxQXaISCnpotV5Cz8Xy7AAYhPR5Qtw+KA==}
     peerDependencies:
@@ -131,6 +134,11 @@ packages:
 
   '@automerge/automerge@3.2.2':
     resolution: {integrity: sha512-A6E2MDnX+IWmFV2GydrkJEf4ClO2hucROJkGmX3bWYoZfgvmCz3QFqew126/uXQAJxWq8WMFf34PuKa7c/cJfg==}
+
+  '@automerge/react@2.5.1':
+    resolution: {integrity: sha512-OYZMCInoclpNq6ofxTzXkRc6YEqvjtwBXt1JdBV3DmsDShrxJ8TnYzqbclfXCWek+ur9B3uHjD5XlSxQFwt4nA==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
 
   '@babel/code-frame@7.28.6':
     resolution: {integrity: sha512-JYgintcMjRiCvS8mMECzaEn+m3PfoQiyqukOMCCVQtoJGYJw8j/8LBJEiqkHLkfwCcs74E3pbAUFNg7d9VNJ+Q==}
@@ -1268,9 +1276,6 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  date-fns@4.1.0:
-    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
-
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -1517,6 +1522,11 @@ packages:
   isbot@5.1.33:
     resolution: {integrity: sha512-P4Hgb5NqswjkI0J1CM6XKXon/sxKY1SuowE7Qx2hrBhIwICFyXy54mfgB5eMHXsbe/eStzzpbIGNOvGmz+dlKg==}
     engines: {node: '>=18'}
+
+  isomorphic-ws@5.0.0:
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '*'
 
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
@@ -2179,6 +2189,33 @@ snapshots:
 
   '@adobe/css-tools@4.4.4': {}
 
+  '@automerge/automerge-repo-network-broadcastchannel@2.5.1':
+    dependencies:
+      '@automerge/automerge-repo': 2.5.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@automerge/automerge-repo-network-messagechannel@2.5.1':
+    dependencies:
+      '@automerge/automerge-repo': 2.5.1
+      debug: 4.4.3
+      eventemitter3: 5.0.4
+    transitivePeerDependencies:
+      - supports-color
+
+  '@automerge/automerge-repo-network-websocket@2.5.1':
+    dependencies:
+      '@automerge/automerge-repo': 2.5.1
+      cbor-x: 1.6.0
+      debug: 4.4.3
+      eventemitter3: 5.0.4
+      isomorphic-ws: 5.0.0(ws@8.19.0)
+      ws: 8.19.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   '@automerge/automerge-repo-react-hooks@2.5.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@automerge/automerge': 3.2.2
@@ -2210,6 +2247,21 @@ snapshots:
       - supports-color
 
   '@automerge/automerge@3.2.2': {}
+
+  '@automerge/react@2.5.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      '@automerge/automerge-repo': 2.5.1
+      '@automerge/automerge-repo-network-broadcastchannel': 2.5.1
+      '@automerge/automerge-repo-network-messagechannel': 2.5.1
+      '@automerge/automerge-repo-network-websocket': 2.5.1
+      '@automerge/automerge-repo-react-hooks': 2.5.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@automerge/automerge-repo-storage-indexeddb': 2.5.1
+      react: 19.2.3
+    transitivePeerDependencies:
+      - bufferutil
+      - react-dom
+      - supports-color
+      - utf-8-validate
 
   '@babel/code-frame@7.28.6':
     dependencies:
@@ -3307,8 +3359,6 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  date-fns@4.1.0: {}
-
   debug@2.6.9:
     dependencies:
       ms: 2.0.0
@@ -3569,6 +3619,10 @@ snapshots:
       hasown: 2.0.2
 
   isbot@5.1.33: {}
+
+  isomorphic-ws@5.0.0(ws@8.19.0):
+    dependencies:
+      ws: 8.19.0
 
   jiti@2.6.1: {}
 
