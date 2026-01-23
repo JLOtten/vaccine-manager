@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -9,6 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import {
   useFamilyMembers,
   useVaccines,
@@ -37,17 +39,17 @@ export default function ViewRecord() {
   const loading = membersLoading || vaccinesLoading || recordsLoading;
 
   return (
-    <div style={{ maxWidth: 1200, margin: "20px auto", padding: "0 20px" }}>
-      <h1
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
+    <Box sx={{ maxWidth: 1200, margin: "20px auto", padding: "0 20px" }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{
+          textAlign: "center",
         }}
       >
         View Vaccine Records
-      </h1>
+      </Typography>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -75,18 +77,20 @@ export default function ViewRecord() {
       {selectedFamilyMemberId && (
         <>
           {loading ? (
-            <div style={{ textAlign: "center", padding: "20px" }}>
-              Loading records...
-            </div>
+            <Box sx={{ textAlign: "center", padding: "20px" }}>
+              <Typography variant="body1">Loading records...</Typography>
+            </Box>
           ) : records.length === 0 ? (
             <Alert severity="info">
               No vaccine records found for {selectedFamilyMember?.name}.
             </Alert>
           ) : (
             <TableContainer component={Paper}>
-              <h2 style={{ paddingLeft: "16px" }}>
-                Vaccine Records for {selectedFamilyMember?.name}
-              </h2>
+              <Box sx={{ p: 2 }}>
+                <Typography variant="h6" component="h2">
+                  Vaccine Records for {selectedFamilyMember?.name}
+                </Typography>
+              </Box>
               <Table sx={{ minWidth: 650 }} aria-label="vaccine records table">
                 <TableHead>
                   <TableRow>
@@ -116,6 +120,6 @@ export default function ViewRecord() {
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 }

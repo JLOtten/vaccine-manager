@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,6 +12,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFamilyMembers } from "~/hooks/useStorage";
 import type { FamilyMember, FamilyMemberCreate } from "~/lib/types";
@@ -24,7 +26,11 @@ function BasicTable({
 }) {
   return (
     <TableContainer component={Paper}>
-      <h1 style={{ paddingLeft: "16px" }}>Currently Tracked Members</h1>
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" component="h2">
+          Currently Tracked Members
+        </Typography>
+      </Box>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -116,11 +122,14 @@ function MyForm({ onMemberAdded }: { onMemberAdded: () => void }) {
   };
 
   return (
-    <form
+    <Box
+      component="form"
       onSubmit={handleSubmit}
-      style={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}
+      sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}
     >
-      <h1>Enter New Family Member</h1>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Enter New Family Member
+      </Typography>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -174,7 +183,7 @@ function MyForm({ onMemberAdded }: { onMemberAdded: () => void }) {
       >
         {loading ? "Adding..." : "Add Family Member"}
       </Button>
-    </form>
+    </Box>
   );
 }
 
@@ -182,30 +191,33 @@ export default function FamilyMemberLog() {
   const { members, loading, error, deleteMember, refresh } = useFamilyMembers();
 
   return (
-    <div>
-      <h1
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
+    <Box>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{
+          textAlign: "center",
+          mt: 3,
         }}
       >
         Family Member Log
-      </h1>
+      </Typography>
       {error && (
         <Alert severity="error" sx={{ m: 2 }}>
           {error}
         </Alert>
       )}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
+        <Box sx={{ textAlign: "center", padding: "20px" }}>
+          <Typography variant="body1">Loading...</Typography>
+        </Box>
       ) : (
         <>
           <BasicTable familyMembers={members} onDelete={deleteMember} />
           <MyForm onMemberAdded={refresh} />
         </>
       )}
-    </div>
+    </Box>
   );
 }

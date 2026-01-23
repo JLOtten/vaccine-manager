@@ -79,8 +79,10 @@ export default function Settings() {
   const displaySuccess = localSuccess;
 
   return (
-    <div style={{ maxWidth: 800, margin: "40px auto", padding: "0 20px" }}>
-      <h1>Settings</h1>
+    <Box sx={{ maxWidth: 800, margin: "40px auto", padding: "0 20px" }}>
+      <Typography variant="h3" component="h1" gutterBottom>
+        Settings
+      </Typography>
 
       {displayError && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -189,6 +191,6 @@ export default function Settings() {
           prevent loss.
         </Typography>
       </Box>
-    </div>
+    </Box>
   );
 }
