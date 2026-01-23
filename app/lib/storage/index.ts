@@ -2,7 +2,11 @@
  * Storage exports - single source of truth for storage implementation
  */
 
-import { AutomergeStorageAdapter, getRepo, getOrCreateDocumentUrl } from "./automergeStorage";
+import {
+  AutomergeStorageAdapter,
+  getRepo,
+  getOrCreateDocumentUrl,
+} from "./automergeStorage";
 import type { IStorage } from "./interface";
 
 // Singleton instance - using CRDT storage for conflict-free merging

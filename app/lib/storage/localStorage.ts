@@ -106,7 +106,7 @@ export class LocalStorageAdapter implements IStorage {
     const data = this.getStoredData();
     if (familyMemberId) {
       return data.vaccineRecords.filter(
-        (r) => r.familyMemberId === familyMemberId
+        (r) => r.familyMemberId === familyMemberId,
       );
     }
     return data.vaccineRecords;
@@ -134,7 +134,7 @@ export class LocalStorageAdapter implements IStorage {
 
   async updateFamilyMember(
     id: string,
-    updates: Partial<FamilyMemberCreate>
+    updates: Partial<FamilyMemberCreate>,
   ): Promise<FamilyMember> {
     const data = this.getStoredData();
     const index = data.familyMembers.findIndex((m) => m.id === id);
@@ -156,7 +156,7 @@ export class LocalStorageAdapter implements IStorage {
     data.familyMembers = data.familyMembers.filter((m) => m.id !== id);
     // Also delete associated vaccine records
     data.vaccineRecords = data.vaccineRecords.filter(
-      (r) => r.familyMemberId !== id
+      (r) => r.familyMemberId !== id,
     );
     this.saveData(data);
   }
@@ -178,7 +178,7 @@ export class LocalStorageAdapter implements IStorage {
 
   async updateVaccineRecord(
     id: string,
-    updates: Partial<VaccineRecordCreate>
+    updates: Partial<VaccineRecordCreate>,
   ): Promise<VaccineRecord> {
     const data = this.getStoredData();
     const index = data.vaccineRecords.findIndex((r) => r.id === id);
@@ -222,7 +222,7 @@ export class LocalStorageAdapter implements IStorage {
       this.saveData(validated);
     } catch (error) {
       throw new Error(
-        `Invalid import data: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Invalid import data: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
