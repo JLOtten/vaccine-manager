@@ -10,8 +10,6 @@ import {
 import type { Route } from "./+types/root";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import "./app.css";
-// Import home page CSS to ensure it's included in the bundle
-import "./components/Home.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
