@@ -2,14 +2,34 @@ import { Link } from "react-router";
 import ArticleIcon from "@mui/icons-material/Article";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-// CSS is imported via the route's links function for proper loading
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 
 export default function Home() {
+  const cards = [
+    {
+      to: "/family-members",
+      icon: <PersonAddAltIcon sx={{ fontSize: 80 }} />,
+      label: "Manage Family Members",
+    },
+    {
+      to: "/view-records",
+      icon: <ArticleIcon sx={{ fontSize: 80 }} />,
+      label: "View Vaccine Records",
+    },
+    {
+      to: "/add-vaccine",
+      icon: <EditNoteIcon sx={{ fontSize: 80 }} />,
+      label: "Record New Vaccine",
+    },
+  ];
+
   return (
-    <div>
-      <div
-        style={{
-          color: "#0f274a",
+    <Box>
+      <Box
+        sx={{
+          color: "primary.dark",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -17,12 +37,22 @@ export default function Home() {
           padding: "40px 20px",
         }}
       >
-        <h1>Welcome to your vaccine manager!</h1>
-        <h2>Choose an option below:</h2>
-      </div>
-      <div className="card-container">
-        <div
-          style={{
+        <Typography variant="h3" component="h1" gutterBottom>
+          Welcome to your vaccine manager!
+        </Typography>
+        <Typography variant="h5" component="h2" color="text.secondary">
+          Choose an option below:
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "20px",
+        }}
+      >
+        <Box
+          sx={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
@@ -31,28 +61,49 @@ export default function Home() {
             gap: "20px",
           }}
         >
-          <Link to="/family-members" className="card-button">
-            <div className="card-content">
-              <li>Manage Family Members</li>
-              <PersonAddAltIcon sx={{ fontSize: 100 }} />
-            </div>
-          </Link>
-
-          <Link to="/view-records" className="card-button">
-            <div className="card-content">
-              <li>View Vaccine Records</li>
-              <ArticleIcon sx={{ fontSize: 100 }} />
-            </div>
-          </Link>
-
-          <Link to="/add-vaccine" className="card-button">
-            <div className="card-content">
-              <li>Record New Vaccine</li>
-              <EditNoteIcon sx={{ fontSize: 100 }} />
-            </div>
-          </Link>
-        </div>
-      </div>
-    </div>
+          {cards.map((card) => (
+            <Paper
+              key={card.to}
+              component={Link}
+              to={card.to}
+              elevation={3}
+              sx={{
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                borderRadius: "15px",
+                padding: "30px",
+                minWidth: "250px",
+                minHeight: "200px",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15)",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  color: "white",
+                  textAlign: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "20px",
+                }}
+              >
+                <Typography variant="h6" component="div" fontWeight={600}>
+                  {card.label}
+                </Typography>
+                {card.icon}
+              </Box>
+            </Paper>
+          ))}
+        </Box>
+      </Box>
+    </Box>
   );
 }

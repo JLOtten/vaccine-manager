@@ -1,7 +1,9 @@
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Link } from "react-router";
 import {
@@ -81,14 +83,18 @@ export default function AddVaccine() {
 
   if (dataLoading) {
     return (
-      <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
+      <Box sx={{ textAlign: "center", padding: "20px" }}>
+        <Typography variant="body1">Loading...</Typography>
+      </Box>
     );
   }
 
   if (members.length === 0) {
     return (
-      <div style={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
-        <h1>Add Vaccine</h1>
+      <Box sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Add Vaccine
+        </Typography>
         <Alert severity="info">
           No family members found. Please add a family member first.
         </Alert>
@@ -101,24 +107,28 @@ export default function AddVaccine() {
         >
           Add Family Member
         </Button>
-      </div>
+      </Box>
     );
   }
 
   if (vaccines.length === 0) {
     return (
-      <div style={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
-        <h1>Add Vaccine</h1>
+      <Box sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Add Vaccine
+        </Typography>
         <Alert severity="info">
           No vaccines available. Please contact your administrator.
         </Alert>
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div style={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
-      <h1>Add Vaccine Record</h1>
+    <Box sx={{ maxWidth: 600, margin: "20px auto", padding: "0 20px" }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Add Vaccine Record
+      </Typography>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -221,6 +231,6 @@ export default function AddVaccine() {
           {loading ? "Adding..." : "Add Vaccine Record"}
         </Button>
       </form>
-    </div>
+    </Box>
   );
 }

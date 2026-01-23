@@ -19,7 +19,6 @@ const pages = [
   { label: "Add Vaccine", path: "/add-vaccine" },
   { label: "View Records", path: "/view-records" },
   { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact" },
 ];
 
 function ResponsiveAppBar() {

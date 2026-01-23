@@ -7,5 +7,4 @@ export default [
   route("view-records", "routes/view-records.tsx"),
   route("settings", "routes/settings.tsx"),
   route("about", "routes/about.tsx"),
-  route("contact", "routes/contact.tsx"),
 ] satisfies RouteConfig;
