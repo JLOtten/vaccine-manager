@@ -55,6 +55,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+export function HydrateFallback() {
+  return (
+    <div style={{ padding: "20px", textAlign: "center", marginTop: "50px" }}>
+      Loading Vaccine Manager...
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <>

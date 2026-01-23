@@ -48,9 +48,6 @@ export function getRepo(): Repo {
   return repoInstance;
 }
 
-// Export a getter for the repo (for backward compatibility)
-export const repo = typeof window !== "undefined" ? getRepo() : (null as any);
-
 /**
  * Get or initialize the document URL
  * This function ensures a document exists and returns its URL for use with useDocument()

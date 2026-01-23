@@ -13,4 +13,8 @@ export default defineConfig({
     reactRouter(),
     tsconfigPaths(),
   ],
+  worker: {
+    // Required if Automerge uses web workers
+    plugins: () => [wasm(), topLevelAwait()],
+  },
 });

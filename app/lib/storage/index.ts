@@ -10,9 +10,25 @@ import {
 import type { IStorage } from "./interface";
 
 // Singleton instance - using CRDT storage for conflict-free merging
-let storageInstance: IStorage = new AutomergeStorageAdapter();
+// Lazy initialization to prevent module-level instantiation during build
+let storageInstance: IStorage | null = null;
 
-export const storage = storageInstance;
+function getStorageInstance(): IStorage {
+  if (typeof window === "undefined") {
+    throw new Error("Storage can only be initialized in browser context");
+  }
+  if (!storageInstance) {
+    storageInstance = new AutomergeStorageAdapter();
+  }
+  return storageInstance;
+}
+
+// Use a Proxy to lazily initialize storage on first access
+export const storage = new Proxy({} as IStorage, {
+  get(_, prop) {
+    return getStorageInstance()[prop as keyof IStorage];
+  },
+});
 
 // Export repo getter and document URL helper for React hooks
 export { getRepo, getOrCreateDocumentUrl };
