@@ -68,9 +68,9 @@ export default function Home() {
               elevation={3}
               sx={{
                 background: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'linear-gradient(135deg, #4a5d8a 0%, #5a3d7a 100%)'
-                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  theme.palette.mode === "dark"
+                    ? "linear-gradient(135deg, #4a5d8a 0%, #5a3d7a 100%)"
+                    : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                 borderRadius: "15px",
                 padding: { xs: "20px", sm: "30px" },
                 minWidth: { xs: "200px", sm: "250px" },
