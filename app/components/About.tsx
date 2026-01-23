@@ -46,7 +46,7 @@ export default function About() {
         regarding vaccination decisions and medical questions.
       </Typography>
 
-      <Box sx={{ mt: 4, pt: 3, borderTop: "1px solid #e0e0e0" }}>
+      <Box sx={{ mt: 4, pt: 3, borderTop: 1, borderColor: "divider" }}>
         <Link
           href="https://github.com/cmiller01/vaccine-manager"
           target="_blank"

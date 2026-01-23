@@ -91,10 +91,41 @@ export default function App() {
         palette: {
           mode: prefersDarkMode ? "dark" : "light",
           primary: {
-            main: "#0f274a",
+            main: prefersDarkMode ? "#5a7fc4" : "#0f274a",
+            light: prefersDarkMode ? "#7c9cd9" : "#3a5a7c",
+            dark: prefersDarkMode ? "#3d5a8a" : "#081a32",
           },
           secondary: {
             main: "#667eea",
+            light: "#9198f0",
+            dark: "#4a57c4",
+          },
+          background: {
+            default: prefersDarkMode ? "#121212" : "#fafafa",
+            paper: prefersDarkMode ? "#1e1e1e" : "#ffffff",
+          },
+          text: {
+            primary: prefersDarkMode ? "#e4e4e7" : "#18181b",
+            secondary: prefersDarkMode ? "#a1a1aa" : "#71717a",
+          },
+        },
+        typography: {
+          fontFamily: "'Roboto', 'Poppins', sans-serif",
+        },
+        components: {
+          MuiAppBar: {
+            styleOverrides: {
+              colorPrimary: {
+                backgroundColor: prefersDarkMode ? "#1e293b" : "#0f274a",
+              },
+            },
+          },
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                textTransform: "none",
+              },
+            },
           },
         },
       }),

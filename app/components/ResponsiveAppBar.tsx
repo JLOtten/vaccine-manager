@@ -40,7 +40,7 @@ function ResponsiveAppBar() {
         <Toolbar disableGutters>
           <VaccinesIcon
             sx={{
-              color: "#fff",
+              color: "primary.contrastText",
               display: { xs: "none", md: "flex" },
               mr: 1,
             }}
@@ -56,7 +56,7 @@ function ResponsiveAppBar() {
               fontFamily: "'Poppins', sans-serif",
               fontWeight: 700,
               letterSpacing: ".2rem",
-              color: "#fff",
+              color: "primary.contrastText",
               textDecoration: "none",
             }}
           >
@@ -70,7 +70,7 @@ function ResponsiveAppBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              sx={{ color: "#fff" }}
+              sx={{ color: "primary.contrastText" }}
             >
               <MenuIcon />
             </IconButton>
@@ -119,7 +119,7 @@ function ResponsiveAppBar() {
               fontFamily: "'Poppins', sans-serif",
               fontWeight: 700,
               letterSpacing: ".2rem",
-              color: "#fff",
+              color: "primary.contrastText",
               textDecoration: "none",
             }}
           >
@@ -133,7 +133,7 @@ function ResponsiveAppBar() {
                 component={Link}
                 to={page.path}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "primary.contrastText", display: "block" }}
               >
                 {page.label}
               </Button>
@@ -144,7 +144,7 @@ function ResponsiveAppBar() {
             <IconButton
               component={Link}
               to="/settings"
-              sx={{ color: "#fff" }}
+              sx={{ color: "primary.contrastText" }}
               aria-label="settings"
             >
               <SettingsIcon />

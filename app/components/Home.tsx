@@ -29,7 +29,6 @@ export default function Home() {
     <Box>
       <Box
         sx={{
-          color: "primary.dark",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
