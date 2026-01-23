@@ -27,6 +27,7 @@ export interface VaccineRecord {
   notes?: string;
   createdAt: string; // ISO datetime string
   updatedAt: string; // ISO datetime string
+  deletedAt?: string; // ISO datetime string when deleted (soft delete)
 }
 
 export interface AppData {
