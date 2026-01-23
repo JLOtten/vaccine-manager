@@ -8,7 +8,7 @@ beforeEach(() => {
   if (typeof crypto === "undefined") {
     (global as any).crypto = {};
   }
-  crypto.randomUUID = vi.fn(() => `test-uuid-${++mockUuidCounter}`);
+  crypto.randomUUID = vi.fn(() => `test-uuid-${++mockUuidCounter}`) as any;
 });
 
 // Setup localStorage mock

@@ -79,7 +79,7 @@ export async function getOrCreateDocumentUrl(): Promise<DocumentId> {
   // Store the document URL for future sessions
   localStorage.setItem(DOCUMENT_URL_KEY, handle.url);
 
-  return handle.url;
+  return handle.url as unknown as DocumentId;
 }
 
 /**
@@ -138,8 +138,8 @@ export class AutomergeStorageAdapter implements IStorage {
     const storedUrl = localStorage.getItem(DOCUMENT_URL_KEY);
 
     if (storedUrl) {
-      // Find the existing document
-      this.handle = currentRepo.find<AppData>(storedUrl as DocumentId);
+      // Find the existing document - find() returns a Promise in v2
+      this.handle = await currentRepo.find<AppData>(storedUrl as any);
       return;
     }
 
@@ -158,7 +158,7 @@ export class AutomergeStorageAdapter implements IStorage {
    */
   async getDocumentUrl(): Promise<DocumentId | null> {
     await this.ensureReady();
-    return this.handle?.url || null;
+    return (this.handle?.url as unknown as DocumentId) || null;
   }
 
   private async ensureReady(): Promise<void> {

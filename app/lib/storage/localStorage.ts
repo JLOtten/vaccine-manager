@@ -209,14 +209,19 @@ export class LocalStorageAdapter implements IStorage {
     localStorage.removeItem(STORAGE_KEY);
   }
 
-  async export(): Promise<string> {
+  async export(): Promise<Uint8Array> {
     const data = this.getStoredData();
     data.exportedAt = new Date().toISOString();
-    return JSON.stringify(data, null, 2);
+    const jsonString = JSON.stringify(data, null, 2);
+    // Convert JSON string to Uint8Array to match interface
+    return new TextEncoder().encode(jsonString);
   }
 
-  async import(jsonString: string): Promise<void> {
+  async import(data: Uint8Array | ArrayBuffer): Promise<void> {
     try {
+      // Convert binary data to string
+      const binary = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
+      const jsonString = new TextDecoder().decode(binary);
       const parsed = JSON.parse(jsonString);
       const validated = AppDataSchema.parse(parsed);
       this.saveData(validated);
@@ -225,5 +230,12 @@ export class LocalStorageAdapter implements IStorage {
         `Invalid import data: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
+  }
+
+  // Secondary export (JSON - human-readable)
+  async exportJSON(): Promise<string> {
+    const data = this.getStoredData();
+    data.exportedAt = new Date().toISOString();
+    return JSON.stringify(data, null, 2);
   }
 }
