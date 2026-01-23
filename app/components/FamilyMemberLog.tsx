@@ -13,7 +13,7 @@ import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFamilyMembers } from "~/hooks/useStorage";
-import type { FamilyMember } from "~/lib/types";
+import type { FamilyMember, FamilyMemberCreate } from "~/lib/types";
 
 function BasicTable({
   familyMembers,
@@ -90,11 +90,18 @@ function MyForm({ onMemberAdded }: { onMemberAdded: () => void }) {
     setLoading(true);
 
     try {
-      await addMember({
+      // Build member object with required fields
+      const member: FamilyMemberCreate = {
         name,
         birthdate,
-        sex: sex ? (sex as "Male" | "Female" | "Other") : undefined,
-      });
+      };
+
+      // Only include sex if a value was selected
+      if (sex) {
+        member.sex = sex as "Male" | "Female" | "Other";
+      }
+
+      await addMember(member);
       setName("");
       setBirthdate("");
       setSex("");

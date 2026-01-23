@@ -59,34 +59,23 @@ export async function getOrCreateDocumentUrl(): Promise<DocumentId> {
   // Check if we have a stored document URL
   const storedUrl = localStorage.getItem(DOCUMENT_URL_KEY);
 
-    const currentRepo = getRepo();
+  const currentRepo = getRepo();
 
-    if (storedUrl) {
-      try {
-        // Try to load existing document
-        const handle = currentRepo.find<AppData>(storedUrl as DocumentId);
-        await handle.whenReady();
-        
-        // Verify the document loaded successfully
-        if (handle.docSync()) {
-          return storedUrl as DocumentId;
-        }
-      } catch (error) {
-        console.error("Failed to load existing document:", error);
-      }
-    }
+  if (storedUrl) {
+    // Just return the stored URL - the repo will handle loading it
+    return storedUrl as DocumentId;
+  }
 
-    // Create new document if none exists or loading failed
-    const handle = currentRepo.create<AppData>();
-    handle.change((doc) => {
-      Object.assign(doc, getDefaultData());
-    });
+  // Create new document if none exists
+  const handle = currentRepo.create<AppData>();
+  handle.change((doc) => {
+    Object.assign(doc, getDefaultData());
+  });
 
-    // Store the document URL for future sessions
-    localStorage.setItem(DOCUMENT_URL_KEY, handle.url);
-    await handle.whenReady();
-    
-    return handle.url;
+  // Store the document URL for future sessions
+  localStorage.setItem(DOCUMENT_URL_KEY, handle.url);
+  
+  return handle.url;
 }
 
 /**
@@ -145,21 +134,12 @@ export class AutomergeStorageAdapter implements IStorage {
     const storedUrl = localStorage.getItem(DOCUMENT_URL_KEY);
 
     if (storedUrl) {
-      try {
-        // Try to load existing document
-        this.handle = currentRepo.find<AppData>(storedUrl as DocumentId);
-        await this.handle.whenReady();
-        
-        // Verify the document loaded successfully
-        if (this.handle.docSync()) {
-          return;
-        }
-      } catch (error) {
-        console.error("Failed to load existing document:", error);
-      }
+      // Find the existing document
+      this.handle = currentRepo.find<AppData>(storedUrl as DocumentId);
+      return;
     }
 
-    // Create new document if none exists or loading failed
+    // Create new document if none exists
     this.handle = currentRepo.create<AppData>();
     this.handle.change((doc) => {
       Object.assign(doc, getDefaultData());
@@ -167,7 +147,6 @@ export class AutomergeStorageAdapter implements IStorage {
 
     // Store the document URL for future sessions
     localStorage.setItem(DOCUMENT_URL_KEY, this.handle.url);
-    await this.handle.whenReady();
   }
 
   /**
@@ -183,7 +162,14 @@ export class AutomergeStorageAdapter implements IStorage {
     if (!this.handle) {
       throw new Error("Document handle not initialized");
     }
-    await this.handle.whenReady();
+    // Wait for the document to be ready using the handle's doc() method
+    // which will wait until the document is loaded from storage or network
+    try {
+      await this.handle.doc();
+    } catch (error) {
+      console.error("Error ensuring document ready:", error);
+      throw error;
+    }
   }
 
   private getDoc(): AppData {
@@ -437,8 +423,6 @@ export class AutomergeStorageAdapter implements IStorage {
       // Update reference and store new URL
       this.handle = newHandle;
       localStorage.setItem(DOCUMENT_URL_KEY, newHandle.url);
-      
-      await this.handle.whenReady();
     } catch (error) {
       throw new Error(
         `Failed to import CRDT data. Make sure you're importing a .crdt file, not a .json file. ${
