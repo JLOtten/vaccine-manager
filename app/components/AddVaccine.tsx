@@ -1,10 +1,15 @@
-import { useState } from "react";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import { useFamilyMembers, useVaccines, useVaccineRecords } from "~/hooks/useStorage";
+import { useState } from "react";
 import { Link } from "react-router";
+import {
+  useFamilyMembers,
+  useVaccineRecords,
+  useVaccines,
+} from "~/hooks/useStorage";
+import type { VaccineRecordCreate } from "~/lib/types";
 
 export default function AddVaccine() {
   const { members, loading: membersLoading } = useFamilyMembers();
@@ -36,14 +41,26 @@ export default function AddVaccine() {
     }
 
     try {
-      await addRecord({
+      // Build record with required fields
+      const record: VaccineRecordCreate = {
         familyMemberId: selectedFamilyMemberId,
         vaccineId: selectedVaccineId,
         date,
         location,
-        dosage: dosage || undefined,
-        notes: notes || undefined,
-      });
+      };
+
+      // Only include optional fields if they have values
+      const trimmedDosage = dosage.trim();
+      const trimmedNotes = notes.trim();
+
+      if (trimmedDosage) {
+        record.dosage = trimmedDosage;
+      }
+      if (trimmedNotes) {
+        record.notes = trimmedNotes;
+      }
+
+      await addRecord(record);
 
       // Reset form
       setSelectedFamilyMemberId("");
@@ -55,7 +72,7 @@ export default function AddVaccine() {
       setSuccess("Vaccine record added successfully!");
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to add vaccine record"
+        err instanceof Error ? err.message : "Failed to add vaccine record",
       );
     } finally {
       setLoading(false);

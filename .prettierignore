@@ -1,0 +1,2 @@
+# Ignore pnpm store
+.pnpm-store/

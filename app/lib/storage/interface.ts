@@ -26,7 +26,7 @@ export interface IStorage {
   addFamilyMember(member: FamilyMemberCreate): Promise<FamilyMember>;
   updateFamilyMember(
     id: string,
-    updates: Partial<FamilyMemberCreate>
+    updates: Partial<FamilyMemberCreate>,
   ): Promise<FamilyMember>;
   deleteFamilyMember(id: string): Promise<void>;
 
@@ -34,12 +34,17 @@ export interface IStorage {
   addVaccineRecord(record: VaccineRecordCreate): Promise<VaccineRecord>;
   updateVaccineRecord(
     id: string,
-    updates: Partial<VaccineRecordCreate>
+    updates: Partial<VaccineRecordCreate>,
   ): Promise<VaccineRecord>;
   deleteVaccineRecord(id: string): Promise<void>;
 
   // Utility operations
   clear(): Promise<void>;
-  export(): Promise<string>;
-  import(jsonString: string): Promise<void>;
+
+  // Primary export/import (CRDT binary - mergeable)
+  export(): Promise<Uint8Array>;
+  import(data: Uint8Array | ArrayBuffer): Promise<void>;
+
+  // Secondary export (JSON - human-readable, NOT importable)
+  exportJSON(): Promise<string>;
 }

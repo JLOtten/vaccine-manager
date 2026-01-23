@@ -15,6 +15,7 @@ pnpm run dev
 ```
 
 **Note**: If you encounter "too many open files" error on macOS:
+
 ```bash
 ulimit -n 10240 && pnpm run dev
 ```
@@ -68,6 +69,7 @@ The app uses a pluggable storage interface (`IStorage`) that makes it easy to sw
 **Current**: LocalStorage (browser-based, no backend needed)
 
 To add a new storage backend:
+
 1. Create a new class implementing `IStorage` interface
 2. Update `app/lib/storage/index.ts` to use your implementation
 
@@ -83,6 +85,7 @@ To add a new storage backend:
 ## Default Vaccines
 
 The app comes pre-configured with:
+
 - COVID-19
 - Seasonal Flu
 - Tdap (Tetanus, diphtheria, pertussis)

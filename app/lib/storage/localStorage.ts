@@ -106,7 +106,7 @@ export class LocalStorageAdapter implements IStorage {
     const data = this.getStoredData();
     if (familyMemberId) {
       return data.vaccineRecords.filter(
-        (r) => r.familyMemberId === familyMemberId
+        (r) => r.familyMemberId === familyMemberId,
       );
     }
     return data.vaccineRecords;
@@ -134,7 +134,7 @@ export class LocalStorageAdapter implements IStorage {
 
   async updateFamilyMember(
     id: string,
-    updates: Partial<FamilyMemberCreate>
+    updates: Partial<FamilyMemberCreate>,
   ): Promise<FamilyMember> {
     const data = this.getStoredData();
     const index = data.familyMembers.findIndex((m) => m.id === id);
@@ -156,7 +156,7 @@ export class LocalStorageAdapter implements IStorage {
     data.familyMembers = data.familyMembers.filter((m) => m.id !== id);
     // Also delete associated vaccine records
     data.vaccineRecords = data.vaccineRecords.filter(
-      (r) => r.familyMemberId !== id
+      (r) => r.familyMemberId !== id,
     );
     this.saveData(data);
   }
@@ -178,7 +178,7 @@ export class LocalStorageAdapter implements IStorage {
 
   async updateVaccineRecord(
     id: string,
-    updates: Partial<VaccineRecordCreate>
+    updates: Partial<VaccineRecordCreate>,
   ): Promise<VaccineRecord> {
     const data = this.getStoredData();
     const index = data.vaccineRecords.findIndex((r) => r.id === id);
@@ -209,21 +209,33 @@ export class LocalStorageAdapter implements IStorage {
     localStorage.removeItem(STORAGE_KEY);
   }
 
-  async export(): Promise<string> {
+  async export(): Promise<Uint8Array> {
     const data = this.getStoredData();
     data.exportedAt = new Date().toISOString();
-    return JSON.stringify(data, null, 2);
+    const jsonString = JSON.stringify(data, null, 2);
+    // Convert JSON string to Uint8Array to match interface
+    return new TextEncoder().encode(jsonString);
   }
 
-  async import(jsonString: string): Promise<void> {
+  async import(data: Uint8Array | ArrayBuffer): Promise<void> {
     try {
+      // Convert binary data to string
+      const binary = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
+      const jsonString = new TextDecoder().decode(binary);
       const parsed = JSON.parse(jsonString);
       const validated = AppDataSchema.parse(parsed);
       this.saveData(validated);
     } catch (error) {
       throw new Error(
-        `Invalid import data: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Invalid import data: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
+  }
+
+  // Secondary export (JSON - human-readable)
+  async exportJSON(): Promise<string> {
+    const data = this.getStoredData();
+    data.exportedAt = new Date().toISOString();
+    return JSON.stringify(data, null, 2);
   }
 }
